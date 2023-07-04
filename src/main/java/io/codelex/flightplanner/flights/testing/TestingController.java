@@ -8,8 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("testing-api/")
 public class TestingController {
 
+    private TestingService testingService;
+
+    public TestingController(TestingService testingService){
+        this.testingService = testingService;
+    }
+
     @PostMapping("clear")
     public String clearDatabase() {
-        return "Database cleared";
+        return testingService.clearDatabase();
     }
 }
