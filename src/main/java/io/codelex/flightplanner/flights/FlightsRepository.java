@@ -23,7 +23,7 @@ public class FlightsRepository {
 
     public AddFlightResponse saveFlight(Flight flight) {
         flights.add(flight);
-        logger.info("Flight " + flight + " added to database");
+        logger.info("Flight added to database");
         return new AddFlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
     }
 

@@ -38,15 +38,20 @@ public class AdminFlightsService {
                     fl.getArrivalTime().equals(flightRequest.getArrivalTime())));
         }
 
+        if(flightRequest.getFrom().getAirport().trim().toUpperCase().equals(flightRequest.getTo().getAirport().trim().toUpperCase())) {
+            logger.error("Trying to add flight what contains the same departure and arrival airport.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Departure airport is the same as arrival.");
+        }
+
         if(flightAlreadyExists) {
             logger.error("Flight what you trying add already exists in database.");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This flight already exists in database");
-        } else {
-            int lastId = flights.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
-            Flight flightToSave = new Flight(flightRequest.getFrom(), flightRequest.getTo(),
-                    flightRequest.getCarrier(), flightRequest.getDepartureTime(), flightRequest.getArrivalTime(), lastId + 1);
-            return flightsRepository.saveFlight(flightToSave);
         }
+
+        int lastId = flights.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
+        Flight flightToSave = new Flight(flightRequest.getFrom(), flightRequest.getTo(),
+                flightRequest.getCarrier(), flightRequest.getDepartureTime(), flightRequest.getArrivalTime(), lastId + 1);
+        return flightsRepository.saveFlight(flightToSave);
     }
 
     public String deleteFlight(String flightId) {
