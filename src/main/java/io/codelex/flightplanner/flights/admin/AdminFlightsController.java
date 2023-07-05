@@ -1,5 +1,8 @@
 package io.codelex.flightplanner.flights.admin;
 
+import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
+import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,9 +20,10 @@ public class AdminFlightsController {
         return adminFlightsService.getFlightById(flightId);
     }
 
-    @PostMapping("flights")
-    public String saveFlight(@RequestBody String flightId){
-        return adminFlightsService.saveFlight(flightId);
+    @PutMapping("flights")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AddFlightResponse saveFlight(@RequestBody AddFlightRequest flight){
+        return adminFlightsService.saveFlight(flight);
     }
 
     @DeleteMapping("flights/{flightId}")

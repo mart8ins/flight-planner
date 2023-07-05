@@ -1,5 +1,7 @@
 package io.codelex.flightplanner.flights;
 
+import io.codelex.flightplanner.flights.admin.domain.Flight;
+import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -8,14 +10,16 @@ import java.util.List;
 @Repository
 public class FlightsRepository {
 
-    // ADMIN
+    private List<Flight> flights = new ArrayList<>();
 
+    // ADMIN
     public String getFlightById(String flightId) {
         return "Flight with id " + flightId;
     }
 
-    public String saveFlight(String flightId) {
-        return "Flight saved: " + flightId;
+    public AddFlightResponse saveFlight(Flight flight) {
+        flights.add(flight);
+        return new AddFlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
     }
 
     public String deleteFlight(String flightId) {
@@ -37,5 +41,9 @@ public class FlightsRepository {
     // TESTING
     public String clearDatabase(){
         return "Database cleared";
+    }
+
+    public List<Flight> getFlights() {
+        return flights;
     }
 }
