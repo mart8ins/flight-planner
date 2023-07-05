@@ -1,10 +1,19 @@
 package io.codelex.flightplanner.flights.admin.request;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Objects;
 
 public class AirportRequest {
+    @NotNull
+    @NotEmpty
     private String country;
+    @NotNull
+    @NotEmpty
     private String city;
+    @NotNull
+    @NotEmpty
     private String airport;
 
     public AirportRequest(String country, String city, String airport) {

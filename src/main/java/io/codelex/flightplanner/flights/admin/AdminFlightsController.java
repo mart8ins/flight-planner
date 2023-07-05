@@ -2,6 +2,7 @@ package io.codelex.flightplanner.flights.admin;
 
 import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
 import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class AdminFlightsController {
 
     @PutMapping("flights")
     @ResponseStatus(HttpStatus.CREATED)
-    public AddFlightResponse saveFlight(@RequestBody AddFlightRequest flight){
+    public AddFlightResponse saveFlight(@Valid @RequestBody AddFlightRequest flight){
         return adminFlightsService.saveFlight(flight);
     }
 
