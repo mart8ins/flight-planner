@@ -2,6 +2,8 @@ package io.codelex.flightplanner.flights;
 
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -9,6 +11,8 @@ import java.util.List;
 
 @Repository
 public class FlightsRepository {
+
+    Logger logger = LoggerFactory.getLogger(FlightsRepository.class);
 
     private List<Flight> flights = new ArrayList<>();
 
@@ -19,6 +23,7 @@ public class FlightsRepository {
 
     public AddFlightResponse saveFlight(Flight flight) {
         flights.add(flight);
+        logger.info("Flight " + flight + " added to database");
         return new AddFlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
     }
 
@@ -39,8 +44,9 @@ public class FlightsRepository {
     }
 
     // TESTING
-    public String clearDatabase(){
-        return "Database cleared";
+    public void clearDatabase(){
+        logger.info("Database cleared.");
+        flights.clear();
     }
 
     public List<Flight> getFlights() {
