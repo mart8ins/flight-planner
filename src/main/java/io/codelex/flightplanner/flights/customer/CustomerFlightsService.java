@@ -19,7 +19,8 @@ public class CustomerFlightsService {
     }
 
     public String getFlightById(String flightId) {
-        return flightsRepository.getFlightById(flightId);
+        return "";
+//        return flightsRepository.getFlightById(flightId);
     }
 
     public String searchFlights(String object) {

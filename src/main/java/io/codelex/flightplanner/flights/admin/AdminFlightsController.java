@@ -17,7 +17,7 @@ public class AdminFlightsController {
     }
 
     @GetMapping("flights/{flightId}")
-    public String getFlightById(@PathVariable String flightId){
+    public AddFlightResponse getFlightById(@PathVariable String flightId){
         return adminFlightsService.getFlightById(flightId);
     }
 
