@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -46,6 +48,17 @@ public class AdminFlightsService {
         if(flightAlreadyExists) {
             logger.error("Flight what you trying add already exists in database.");
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This flight already exists in database");
+        }
+
+        DateTimeFormatter departureTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime departureTime = LocalDateTime.parse(flightRequest.getDepartureTime(), departureTimeFormatter);
+
+        DateTimeFormatter arrivalTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime arrivalTime = LocalDateTime.parse(flightRequest.getArrivalTime(), arrivalTimeFormatter);
+
+        if(arrivalTime.isBefore(departureTime) || arrivalTime.isEqual(departureTime)) {
+            logger.error("Incorrect arrival and departure dates. Arrival time is the same or before departure.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect arrival and departure dates.");
         }
 
         int lastId = flights.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
