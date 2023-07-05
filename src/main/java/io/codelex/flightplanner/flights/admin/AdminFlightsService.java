@@ -25,8 +25,10 @@ public class AdminFlightsService {
         this.flightsRepository = flightsRepository;
     }
 
-    public String getFlightById(String flightId) {
-        return flightsRepository.getFlightById(flightId);
+    public AddFlightResponse getFlightById(String flightId) {
+        Flight flightFromDatabase = flightsRepository.getFlightById(flightId);
+        return new AddFlightResponse(flightFromDatabase.getFrom(), flightFromDatabase.getTo(), flightFromDatabase.getCarrier(),
+                flightFromDatabase.getDepartureTime(), flightFromDatabase.getArrivalTime(), flightFromDatabase.getId());
     }
 
     public AddFlightResponse saveFlight(AddFlightRequest flightRequest) {

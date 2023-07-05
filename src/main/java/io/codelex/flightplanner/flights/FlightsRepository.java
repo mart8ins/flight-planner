@@ -4,7 +4,9 @@ import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,14 @@ public class FlightsRepository {
     private List<Flight> flights = new ArrayList<>();
 
     // ADMIN
-    public String getFlightById(String flightId) {
-        return "Flight with id " + flightId;
+    public Flight getFlightById(String flightId) {
+        List<Flight> isFlight = flights.stream().filter(fl -> flightId.equals(fl.getId())).toList();
+        if(isFlight.size() > 0) {
+            logger.info("Flight with id: " + flightId + " was found.");
+            return isFlight.get(0);
+        } else {
+           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no flight with given id.");
+        }
     }
 
     public AddFlightResponse saveFlight(Flight flight) {
@@ -28,7 +36,15 @@ public class FlightsRepository {
     }
 
     public String deleteFlight(String flightId) {
-        return "Flight deleted: " + flightId;
+        boolean removed = flights.removeIf(fl -> flightId.equals(String.valueOf(fl.getId())));
+        if(removed) {
+            logger.info("Flight with id: " + flightId + " removed from database.");
+            return "Flight with id: " + flightId + " removed from database.";
+        } else {
+            logger.info("Flight for deletion with id: " + flightId + " was not found.");
+            return "Flight for deletion with id: " + flightId + " was not found.";
+        }
+
     }
 
     // CUSTOMER
