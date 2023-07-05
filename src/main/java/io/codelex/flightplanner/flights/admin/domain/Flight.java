@@ -3,6 +3,8 @@ package io.codelex.flightplanner.flights.admin.domain;
 import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
 import io.codelex.flightplanner.flights.admin.request.AirportRequest;
 
+import java.util.Objects;
+
 public class Flight extends AddFlightRequest {
 
     private int id;
@@ -25,5 +27,18 @@ public class Flight extends AddFlightRequest {
         return "Flight{" +
                 "id=" + id +
                 "} " + super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Flight flight = (Flight) o;
+        return id == flight.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

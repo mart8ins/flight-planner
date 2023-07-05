@@ -1,5 +1,7 @@
 package io.codelex.flightplanner.flights.admin.request;
 
+import java.util.Objects;
+
 public class AirportRequest {
     private String country;
     private String city;
@@ -42,5 +44,18 @@ public class AirportRequest {
                 ", city='" + city + '\'' +
                 ", airport='" + airport + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AirportRequest that = (AirportRequest) o;
+        return Objects.equals(country, that.country) && Objects.equals(city, that.city) && Objects.equals(airport, that.airport);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(country, city, airport);
     }
 }

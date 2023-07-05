@@ -15,7 +15,7 @@ public class TestingController {
     }
 
     @PostMapping("clear")
-    public String clearDatabase() {
-        return testingService.clearDatabase();
+    public void clearDatabase() {
+        testingService.clearDatabase();
     }
 }

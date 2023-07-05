@@ -11,7 +11,7 @@ public class TestingService {
         this.flightsRepository = flightsRepository;
     }
 
-    public String clearDatabase(){
-        return flightsRepository.clearDatabase();
+    public void clearDatabase(){
+        flightsRepository.clearDatabase();
     }
 }
