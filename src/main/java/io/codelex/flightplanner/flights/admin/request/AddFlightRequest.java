@@ -1,10 +1,23 @@
 package io.codelex.flightplanner.flights.admin.request;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
 public class AddFlightRequest {
+    @NotNull
+    @Valid
     private AirportRequest from;
+    @NotNull
+    @Valid
     private AirportRequest to;
+    @NotNull
+    @NotEmpty
     private String carrier;
+    @NotNull
+    @NotEmpty
     private String departureTime;
+    @NotNull
+    @NotEmpty
     private String arrivalTime;
 
     public AddFlightRequest(AirportRequest from, AirportRequest to, String carrier, String departureTime, String arrivalTime) {
