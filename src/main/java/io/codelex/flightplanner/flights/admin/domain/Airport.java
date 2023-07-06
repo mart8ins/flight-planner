@@ -1,11 +1,11 @@
-package io.codelex.flightplanner.flights.admin.request;
+package io.codelex.flightplanner.flights.admin.domain;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
-public class AirportRequest {
+public class Airport {
     @NotNull
     @NotEmpty
     private String country;
@@ -16,7 +16,7 @@ public class AirportRequest {
     @NotEmpty
     private String airport;
 
-    public AirportRequest(String country, String city, String airport) {
+    public Airport(String country, String city, String airport) {
         this.country = country;
         this.city = city;
         this.airport = airport;
@@ -47,24 +47,24 @@ public class AirportRequest {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Airport airport1 = (Airport) o;
+        return Objects.equals(country, airport1.country) && Objects.equals(city, airport1.city) && Objects.equals(airport, airport1.airport);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(country, city, airport);
+    }
+
+    @Override
     public String toString() {
         return "Airport{" +
                 "country='" + country + '\'' +
                 ", city='" + city + '\'' +
                 ", airport='" + airport + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AirportRequest that = (AirportRequest) o;
-        return Objects.equals(country, that.country) && Objects.equals(city, that.city) && Objects.equals(airport, that.airport);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(country, city, airport);
     }
 }

@@ -1,15 +1,16 @@
 package io.codelex.flightplanner.flights.admin.request;
 
+import io.codelex.flightplanner.flights.admin.domain.Airport;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 public class AddFlightRequest {
     @NotNull
     @Valid
-    private AirportRequest from;
+    private Airport from;
     @NotNull
     @Valid
-    private AirportRequest to;
+    private Airport to;
     @NotNull
     @NotEmpty
     private String carrier;
@@ -20,7 +21,7 @@ public class AddFlightRequest {
     @NotEmpty
     private String arrivalTime;
 
-    public AddFlightRequest(AirportRequest from, AirportRequest to, String carrier, String departureTime, String arrivalTime) {
+    public AddFlightRequest(Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
         this.from = from;
         this.to = to;
         this.carrier = carrier;
@@ -28,19 +29,19 @@ public class AddFlightRequest {
         this.arrivalTime = arrivalTime;
     }
 
-    public AirportRequest getFrom() {
+    public Airport getFrom() {
         return from;
     }
 
-    public void setFrom(AirportRequest from) {
+    public void setFrom(Airport from) {
         this.from = from;
     }
 
-    public AirportRequest getTo() {
+    public Airport getTo() {
         return to;
     }
 
-    public void setTo(AirportRequest to) {
+    public void setTo(Airport to) {
         this.to = to;
     }
 

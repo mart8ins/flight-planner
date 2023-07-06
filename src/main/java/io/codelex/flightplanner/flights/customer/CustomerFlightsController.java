@@ -1,12 +1,19 @@
 package io.codelex.flightplanner.flights.customer;
 
+import io.codelex.flightplanner.flights.admin.domain.Airport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/")
 public class CustomerFlightsController {
+
+    Logger logger = LoggerFactory.getLogger(CustomerFlightsController.class);
 
     private CustomerFlightsService customerFlightsService;
 
@@ -16,8 +23,8 @@ public class CustomerFlightsController {
 
 
     @GetMapping("airports") // receives query parameter
-    public List<String> searchAirport(@RequestParam String airport){
-        return customerFlightsService.getAirports(airport);
+    public List<Airport> searchAirport(@RequestParam String search){
+        return customerFlightsService.searchAirport(search);
     }
 
     @GetMapping("flights/{flightId}") // receives path variable

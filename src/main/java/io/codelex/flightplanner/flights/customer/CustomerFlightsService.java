@@ -1,6 +1,7 @@
 package io.codelex.flightplanner.flights.customer;
 
 import io.codelex.flightplanner.flights.FlightsRepository;
+import io.codelex.flightplanner.flights.admin.domain.Airport;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +15,8 @@ public class CustomerFlightsService {
         this.flightsRepository = flightsRepository;
     }
 
-    public List<String> getAirports(String query){
-        return flightsRepository.getAirports(query);
+    public List<Airport> searchAirport(String airportSearchQuery){
+        return flightsRepository.searchAirport(airportSearchQuery);
     }
 
     public String getFlightById(String flightId) {
