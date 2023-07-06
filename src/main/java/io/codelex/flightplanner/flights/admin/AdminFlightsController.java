@@ -6,16 +6,11 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 @RestController
 @RequestMapping("admin-api/")
 public class AdminFlightsController {
 
     private AdminFlightsService adminFlightsService;
-
-    ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     public AdminFlightsController(AdminFlightsService adminFlightsService) {
         this.adminFlightsService = adminFlightsService;
