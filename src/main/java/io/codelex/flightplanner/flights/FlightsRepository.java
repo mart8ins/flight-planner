@@ -23,7 +23,6 @@ public class FlightsRepository {
     private List<Flight> flights = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
 
-    // ADMIN
     public Flight getFlightById(String flightId) {
         List<Flight> isFlight = flights.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
         if(isFlight.size() > 0) {
@@ -37,21 +36,7 @@ public class FlightsRepository {
     public synchronized AddFlightResponse saveFlight(Flight flight) {
         flights.add(flight);
         logger.info("Flight added to database: " + flight);
-
-        StringBuilder airportFrom = new StringBuilder();
-        airportFrom.append(flight.getFrom().getCountry() + " ");
-        airportFrom.append(flight.getFrom().getCity() + " ");
-        airportFrom.append(flight.getFrom().getAirport());
-
-        StringBuilder airportTo = new StringBuilder();
-        airportTo.append(flight.getTo().getCountry() + " ");
-        airportTo.append(flight.getTo().getCity() + " ");
-        airportTo.append(flight.getTo().getAirport());
-
-        allAirports.put(airportFrom.toString(), flight.getFrom());
-        allAirports.put(airportTo.toString(), flight.getTo());
-        logger.info("Airport data from flight added to airports database.");
-
+        addAirports(flight);
         return new AddFlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
     }
 
@@ -64,11 +49,9 @@ public class FlightsRepository {
             logger.info("Flight for deletion with id: " + flightId + " was not found.");
             return "Flight for deletion with id: " + flightId + " was not found.";
         }
-
     }
 
-    // CUSTOMER
-    public List<Airport> searchAirport(String airportSearchQuery){
+    public synchronized List<Airport> searchAirport(String airportSearchQuery){
         List<Airport> foundAirports = new ArrayList<>();
         for(Map.Entry<String, Airport> entry: allAirports.entrySet()) {
             if(entry.getKey().toLowerCase().trim().contains(airportSearchQuery.toLowerCase().trim())) {
@@ -100,9 +83,25 @@ public class FlightsRepository {
     public void clearDatabase(){
         logger.info("Database cleared.");
         flights.clear();
+        allAirports.clear();
     }
 
     public List<Flight> getFlights() {
         return flights;
+    }
+
+    private synchronized void addAirports(Flight flight){
+        StringBuilder airportFrom = new StringBuilder();
+        airportFrom.append(flight.getFrom().getCountry() + " ");
+        airportFrom.append(flight.getFrom().getCity() + " ");
+        airportFrom.append(flight.getFrom().getAirport());
+
+        StringBuilder airportTo = new StringBuilder();
+        airportTo.append(flight.getTo().getCountry() + " ");
+        airportTo.append(flight.getTo().getCity() + " ");
+        airportTo.append(flight.getTo().getAirport());
+        allAirports.put(airportFrom.toString(), flight.getFrom());
+        allAirports.put(airportTo.toString(), flight.getTo());
+        logger.info("Airport data from flight added to airports database.");
     }
 }
