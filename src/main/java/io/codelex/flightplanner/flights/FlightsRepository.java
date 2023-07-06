@@ -18,13 +18,12 @@ import java.util.Map;
 public class FlightsRepository {
 
     Logger logger = LoggerFactory.getLogger(FlightsRepository.class);
-
     private List<Flight> flights = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
 
     // ADMIN
     public Flight getFlightById(String flightId) {
-        List<Flight> isFlight = flights.stream().filter(fl -> flightId.equals(fl.getId())).toList();
+        List<Flight> isFlight = flights.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
         if(isFlight.size() > 0) {
             logger.info("Flight with id: " + flightId + " was found.");
             return isFlight.get(0);
