@@ -1,7 +1,11 @@
 package io.codelex.flightplanner.flights.customer;
 
 import io.codelex.flightplanner.flights.admin.domain.Airport;
+import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
+import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +32,7 @@ public class CustomerFlightsController {
     }
 
     @PostMapping("flights/search") // receives body/object
-    public String searchFlights(@RequestBody String flights){
-        return "Searched flights with body, temporarily with string "+ customerFlightsService.searchFlights(flights);
+    public @ResponseBody SearchedFlightsResponse<Flight> searchFlights(@Valid @RequestBody SearchFlightRequest flight){
+        return customerFlightsService.searchFlights(flight);
     }
 }

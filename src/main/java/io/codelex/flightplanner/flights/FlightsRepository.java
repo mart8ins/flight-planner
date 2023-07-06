@@ -3,6 +3,8 @@ package io.codelex.flightplanner.flights;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
+import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -34,7 +36,7 @@ public class FlightsRepository {
 
     public synchronized AddFlightResponse saveFlight(Flight flight) {
         flights.add(flight);
-        logger.info("Flight added to database");
+        logger.info("Flight added to database: " + flight);
 
         StringBuilder airportFrom = new StringBuilder();
         airportFrom.append(flight.getFrom().getCountry() + " ");
@@ -77,11 +79,19 @@ public class FlightsRepository {
         return foundAirports;
     }
 
-    public String searchFlights(String object) {
-        return "Searched flight object is " + object;
+    public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
+        SearchedFlightsResponse result = new SearchedFlightsResponse(0, 0, new ArrayList<Flight>());
+
+        if(flight.getFrom().equals(flight.getTo())) {
+            logger.error("Tried to search flight with invalid data, flight from: " + flight.getFrom() + " flight to: " + flight.getTo());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid search data. From and To airports are equal.");
+        }
+        logger.info("Searched flight is " + flight);
+
+
+        return result;
     }
 
-    // TESTING
     public void clearDatabase(){
         logger.info("Database cleared.");
         flights.clear();
