@@ -88,7 +88,12 @@ public class FlightsRepository {
         }
         logger.info("Searched flight is " + flight);
 
-
+        List<Flight> foundFlights = flights.stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
+                flight.getTo().equals(fl.getTo().getAirport()) &&
+                fl.getDepartureTime().contains(flight.getDepartureDate())).toList();
+        result.setTotalItems(foundFlights.size());
+        result.setItems(foundFlights);
+        result.setPage(foundFlights.size() / 10);
         return result;
     }
 
