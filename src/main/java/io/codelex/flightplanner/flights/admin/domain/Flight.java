@@ -1,7 +1,6 @@
 package io.codelex.flightplanner.flights.admin.domain;
 
 import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
-import io.codelex.flightplanner.flights.admin.request.AirportRequest;
 
 import java.util.Objects;
 
@@ -9,7 +8,7 @@ public class Flight extends AddFlightRequest {
 
     private int id;
 
-    public Flight(AirportRequest from, AirportRequest to, String carrier, String departureTime, String arrivalTime, int id) {
+    public Flight(Airport from, Airport to, String carrier, String departureTime, String arrivalTime, int id) {
         super(from, to, carrier, departureTime, arrivalTime);
         this.id = id;
     }
