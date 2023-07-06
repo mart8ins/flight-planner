@@ -19,7 +19,7 @@ public class AdminFlightsService {
 
     Logger logger = LoggerFactory.getLogger(AdminFlightsService.class);
 
-    FlightsRepository flightsRepository;
+    private FlightsRepository flightsRepository;
 
     public AdminFlightsService(FlightsRepository flightsRepository) {
         this.flightsRepository = flightsRepository;
@@ -66,6 +66,7 @@ public class AdminFlightsService {
         int lastId = flights.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
         Flight flightToSave = new Flight(flightRequest.getFrom(), flightRequest.getTo(),
                 flightRequest.getCarrier(), flightRequest.getDepartureTime(), flightRequest.getArrivalTime(), lastId + 1);
+        flightsRepository.addAirports(flightToSave);
         return flightsRepository.saveFlight(flightToSave);
     }
 

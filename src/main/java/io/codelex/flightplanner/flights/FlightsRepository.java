@@ -23,7 +23,7 @@ public class FlightsRepository {
     private List<Flight> flights = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
 
-    public Flight getFlightById(String flightId) {
+    public synchronized Flight getFlightById(String flightId) {
         List<Flight> isFlight = flights.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
         if(isFlight.size() > 0) {
             logger.info("Flight with id: " + flightId + " was found.");
@@ -36,7 +36,7 @@ public class FlightsRepository {
     public synchronized AddFlightResponse saveFlight(Flight flight) {
         flights.add(flight);
         logger.info("Flight added to database: " + flight);
-        addAirports(flight);
+//        addAirports(flight);
         return new AddFlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
     }
 
@@ -62,7 +62,7 @@ public class FlightsRepository {
         return foundAirports;
     }
 
-    public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
+    public synchronized SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
         SearchedFlightsResponse result = new SearchedFlightsResponse(0, 0, new ArrayList<Flight>());
 
         if(flight.getFrom().equals(flight.getTo())) {
@@ -80,7 +80,7 @@ public class FlightsRepository {
         return result;
     }
 
-    public void clearDatabase(){
+    public synchronized void clearDatabase(){
         logger.info("Database cleared.");
         flights.clear();
         allAirports.clear();
@@ -90,7 +90,7 @@ public class FlightsRepository {
         return flights;
     }
 
-    private synchronized void addAirports(Flight flight){
+    public synchronized void addAirports(Flight flight){
         StringBuilder airportFrom = new StringBuilder();
         airportFrom.append(flight.getFrom().getCountry() + " ");
         airportFrom.append(flight.getFrom().getCity() + " ");
