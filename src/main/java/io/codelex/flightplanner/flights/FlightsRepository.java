@@ -1,7 +1,9 @@
 package io.codelex.flightplanner.flights;
 
+import io.codelex.flightplanner.flights.admin.AdminValidationsService;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
+import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +23,11 @@ import java.util.Map;
 
 @Repository
 public class FlightsRepository {
+
+    AdminValidationsService adminValidationsService;
+    public FlightsRepository(AdminValidationsService adminValidationsService) {
+        this.adminValidationsService = adminValidationsService;
+    }
 
     Logger logger = LoggerFactory.getLogger(FlightsRepository.class);
     private List<Flight> flights = new ArrayList<>();
@@ -35,14 +43,22 @@ public class FlightsRepository {
         }
     }
 
-    public synchronized FlightResponse saveFlight(Flight flight) {
-        flights.add(flight);
-        logger.info("Flight added to database: " + flight);
+    public synchronized FlightResponse saveFlight(FlightRequest flightRequest) {
+        LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
+        LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
+        adminValidationsService.validateRequest(flights, flightRequest, departureDateTime, arrivalDateTime);
 
-        String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flight.getDepartureTime());
-        String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flight.getArrivalTime());
+        int lastId = flights.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
+        Flight flightToSave = new Flight(flightRequest.getFrom(), flightRequest.getTo(),
+                flightRequest.getCarrier(), departureDateTime, arrivalDateTime, lastId + 1);
+        flights.add(flightToSave);
+        logger.info("Flight added to database: " + flightToSave);
 
-        return new FlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), departureDateTime, arrivalDateTime, flight.getId());
+        addAirports(flightToSave);
+
+        String departureDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getDepartureTime());
+        String arrivalDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getArrivalTime());
+        return new FlightResponse(flightToSave.getFrom(), flightToSave.getTo(), flightToSave.getCarrier(), departureDateTimeString, arrivalDateTimeString, flightToSave.getId());
     }
 
     public synchronized String deleteFlight(String flightId) {
@@ -94,11 +110,7 @@ public class FlightsRepository {
         allAirports.clear();
     }
 
-    public List<Flight> getFlights() {
-        return flights;
-    }
-
-    public synchronized void addAirports(Flight flight){
+    private synchronized void addAirports(Flight flight){
         StringBuilder airportFrom = new StringBuilder();
         airportFrom.append(flight.getFrom().getCountry() + " ");
         airportFrom.append(flight.getFrom().getCity() + " ");
