@@ -1,10 +1,10 @@
 package io.codelex.flightplanner.flights.admin.domain;
 
-import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
+import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 
 import java.util.Objects;
 
-public class Flight extends AddFlightRequest {
+public class Flight extends FlightRequest {
 
     private int id;
 

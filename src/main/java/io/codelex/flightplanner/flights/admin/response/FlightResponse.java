@@ -1,15 +1,15 @@
 package io.codelex.flightplanner.flights.admin.response;
 
-import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
+import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 
 import java.util.Objects;
 
-public class AddFlightResponse extends AddFlightRequest {
+public class FlightResponse extends FlightRequest {
 
     private int id;
 
-    public AddFlightResponse(Airport from, Airport to, String carrier, String departureTime, String arrivalTime, int id) {
+    public FlightResponse(Airport from, Airport to, String carrier, String departureTime, String arrivalTime, int id) {
         super(from, to, carrier, departureTime, arrivalTime);
         this.id = id;
     }
@@ -33,7 +33,7 @@ public class AddFlightResponse extends AddFlightRequest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AddFlightResponse that = (AddFlightResponse) o;
+        FlightResponse that = (FlightResponse) o;
         return id == that.id;
     }
 

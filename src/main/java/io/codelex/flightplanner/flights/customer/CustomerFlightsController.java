@@ -2,7 +2,7 @@ package io.codelex.flightplanner.flights.customer;
 
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
-import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
 import jakarta.validation.Valid;
@@ -27,7 +27,7 @@ public class CustomerFlightsController {
     }
 
     @GetMapping("flights/{flightId}")
-    public AddFlightResponse getFlightById(@PathVariable String flightId){
+    public FlightResponse getFlightById(@PathVariable String flightId){
         return customerFlightsService.getFlightById(flightId);
     }
 
