@@ -4,7 +4,7 @@ import io.codelex.flightplanner.flights.admin.domain.Airport;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
-public class AddFlightRequest {
+public class FlightRequest {
     @NotNull
     @Valid
     private Airport from;
@@ -21,7 +21,7 @@ public class AddFlightRequest {
     @NotEmpty
     private String arrivalTime;
 
-    public AddFlightRequest(Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
+    public FlightRequest(Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
         this.from = from;
         this.to = to;
         this.carrier = carrier;

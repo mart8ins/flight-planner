@@ -1,7 +1,7 @@
 package io.codelex.flightplanner.flights.admin;
 
 import io.codelex.flightplanner.flights.admin.domain.Flight;
-import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
+import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ public class AdminValidationsService {
 
     private Logger logger = LoggerFactory.getLogger(AdminValidationsService.class);
 
-    public void validateRequest(List<Flight> flights, AddFlightRequest flightRequest){
+    public void validateRequest(List<Flight> flights, FlightRequest flightRequest){
         boolean flightAlreadyExists = false;
         if(flights.size() > 0) {
             flightAlreadyExists = flights.stream().anyMatch(fl -> (fl.getFrom().equals(flightRequest.getFrom()) &&

@@ -1,7 +1,7 @@
 package io.codelex.flightplanner.flights.admin;
 
-import io.codelex.flightplanner.flights.admin.request.AddFlightRequest;
-import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import io.codelex.flightplanner.flights.admin.request.FlightRequest;
+import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +17,13 @@ public class AdminFlightsController {
     }
 
     @GetMapping("flights/{flightId}")
-    public AddFlightResponse getFlightById(@PathVariable String flightId){
+    public FlightResponse getFlightById(@PathVariable String flightId){
         return adminFlightsService.getFlightById(flightId);
     }
 
     @PutMapping("flights")
     @ResponseStatus(HttpStatus.CREATED)
-    public AddFlightResponse saveFlight(@Valid @RequestBody AddFlightRequest flight){
+    public FlightResponse saveFlight(@Valid @RequestBody FlightRequest flight){
         return adminFlightsService.saveFlight(flight);
     }
 

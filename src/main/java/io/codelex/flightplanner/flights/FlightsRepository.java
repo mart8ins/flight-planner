@@ -2,7 +2,7 @@ package io.codelex.flightplanner.flights;
 
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
-import io.codelex.flightplanner.flights.admin.response.AddFlightResponse;
+import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class FlightsRepository {
     private List<Flight> flights = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
 
-    public synchronized Flight getFlightById(String flightId) {
+    public Flight getFlightById(String flightId) {
         List<Flight> isFlight = flights.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
         if(isFlight.size() > 0) {
             logger.info("Flight with id: " + flightId + " was found.");
@@ -33,11 +33,10 @@ public class FlightsRepository {
         }
     }
 
-    public synchronized AddFlightResponse saveFlight(Flight flight) {
+    public synchronized FlightResponse saveFlight(Flight flight) {
         flights.add(flight);
         logger.info("Flight added to database: " + flight);
-//        addAirports(flight);
-        return new AddFlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
+        return new FlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
     }
 
     public synchronized String deleteFlight(String flightId) {
@@ -51,7 +50,7 @@ public class FlightsRepository {
         }
     }
 
-    public synchronized List<Airport> searchAirport(String airportSearchQuery){
+    public List<Airport> searchAirport(String airportSearchQuery){
         List<Airport> foundAirports = new ArrayList<>();
         for(Map.Entry<String, Airport> entry: allAirports.entrySet()) {
             if(entry.getKey().toLowerCase().trim().contains(airportSearchQuery.toLowerCase().trim())) {
@@ -62,7 +61,7 @@ public class FlightsRepository {
         return foundAirports;
     }
 
-    public synchronized SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
+    public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
         SearchedFlightsResponse result = new SearchedFlightsResponse(0, 0, new ArrayList<Flight>());
 
         if(flight.getFrom().equals(flight.getTo())) {
