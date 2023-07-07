@@ -7,18 +7,13 @@ import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Service
 public class AdminFlightsService {
 
     private FlightsRepository flightsRepository;
-    private AdminValidationsService adminValidationsService;
 
-    public AdminFlightsService(FlightsRepository flightsRepository, AdminValidationsService adminValidationsService) {
+    public AdminFlightsService(FlightsRepository flightsRepository) {
         this.flightsRepository = flightsRepository;
-        this.adminValidationsService = adminValidationsService;
     }
 
     public FlightResponse getFlightById(String flightId) {
@@ -32,25 +27,10 @@ public class AdminFlightsService {
     }
 
     public FlightResponse saveFlight(FlightRequest flightRequest) {
-        List<Flight> flights = flightsRepository.getFlights();
-
-        LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
-        LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
-
-        adminValidationsService.validateRequest(flights, flightRequest, departureDateTime, arrivalDateTime);
-
-        int lastId = flights.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
-
-        Flight flightToSave = new Flight(flightRequest.getFrom(), flightRequest.getTo(),
-                flightRequest.getCarrier(), departureDateTime, arrivalDateTime, lastId + 1);
-
-        flightsRepository.addAirports(flightToSave);
-
-        return flightsRepository.saveFlight(flightToSave);
+        return flightsRepository.saveFlight(flightRequest);
     }
 
     public String deleteFlight(String flightId) {
         return flightsRepository.deleteFlight(flightId);
     }
-
 }
