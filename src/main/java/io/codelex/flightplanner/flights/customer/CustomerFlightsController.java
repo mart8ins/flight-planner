@@ -20,7 +20,6 @@ public class CustomerFlightsController {
         this.customerFlightsService = customerFlightsService;
     }
 
-
     @GetMapping("airports")
     public List<Airport> searchAirport(@RequestParam String search){
         return customerFlightsService.searchAirport(search);

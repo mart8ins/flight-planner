@@ -5,12 +5,14 @@ import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
+import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,11 @@ public class FlightsRepository {
     public synchronized FlightResponse saveFlight(Flight flight) {
         flights.add(flight);
         logger.info("Flight added to database: " + flight);
-        return new FlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), flight.getDepartureTime(), flight.getArrivalTime(), flight.getId());
+
+        String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flight.getDepartureTime());
+        String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flight.getArrivalTime());
+
+        return new FlightResponse(flight.getFrom(), flight.getTo(), flight.getCarrier(), departureDateTime, arrivalDateTime, flight.getId());
     }
 
     public synchronized String deleteFlight(String flightId) {
@@ -70,9 +76,12 @@ public class FlightsRepository {
         }
         logger.info("Searched flight is " + flight);
 
+        DateTimeFormatter flightDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
         List<Flight> foundFlights = flights.stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
                 flight.getTo().equals(fl.getTo().getAirport()) &&
-                fl.getDepartureTime().contains(flight.getDepartureDate())).toList();
+                fl.getDepartureTime().format(flightDateFormatter).equals(flight.getDepartureDate())).toList();
+
         result.setTotalItems(foundFlights.size());
         result.setItems(foundFlights);
         result.setPage(foundFlights.size() / 10);

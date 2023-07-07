@@ -1,5 +1,6 @@
 package io.codelex.flightplanner.flights.admin.domain;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Flight {
@@ -10,13 +11,13 @@ public class Flight {
 
     private String carrier;
 
-    private String departureTime;
+    private LocalDateTime departureTime;
 
-    private String arrivalTime;
+    private LocalDateTime arrivalTime;
 
     private int id;
 
-    public Flight(Airport from, Airport to, String carrier, String departureTime, String arrivalTime, int id) {
+    public Flight(Airport from, Airport to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime, int id) {
         this.from = from;
         this.to = to;
         this.carrier = carrier;
@@ -49,19 +50,19 @@ public class Flight {
         this.carrier = carrier;
     }
 
-    public String getDepartureTime() {
+    public LocalDateTime getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(String departureTime) {
+    public void setDepartureTime(LocalDateTime departureTime) {
         this.departureTime = departureTime;
     }
 
-    public String getArrivalTime() {
+    public LocalDateTime getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(String arrivalTime) {
+    public void setArrivalTime(LocalDateTime arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
