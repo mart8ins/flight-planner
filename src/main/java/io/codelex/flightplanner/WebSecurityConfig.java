@@ -7,24 +7,19 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> {
-                    try {
-                        requests
-                                .requestMatchers("admin-api/flights").authenticated()
-                                .requestMatchers("/admin-api/flights/{flightId}").authenticated()
-                                .anyRequest().permitAll()
-                                .and()
-                                .httpBasic();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        );
+        http.httpBasic(withDefaults())
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("admin-api/flights").authenticated()
+                        .requestMatchers("/admin-api/flights/{flightId}").authenticated()
+                        .anyRequest().permitAll()
+                );
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
