@@ -23,5 +23,4 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
-
 }
