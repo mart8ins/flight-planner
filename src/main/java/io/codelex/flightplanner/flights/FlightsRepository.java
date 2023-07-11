@@ -23,15 +23,14 @@ import java.util.Map;
 
 @Repository
 public class FlightsRepository {
-
+    private List<Flight> flights = new ArrayList<>();
+    private Map<String, Airport> allAirports = new HashMap();
     AdminValidationsService adminValidationsService;
+    Logger logger = LoggerFactory.getLogger(FlightsRepository.class);
+
     public FlightsRepository(AdminValidationsService adminValidationsService) {
         this.adminValidationsService = adminValidationsService;
     }
-
-    Logger logger = LoggerFactory.getLogger(FlightsRepository.class);
-    private List<Flight> flights = new ArrayList<>();
-    private Map<String, Airport> allAirports = new HashMap();
 
     public Flight getFlightById(String flightId) {
         List<Flight> isFlight = flights.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();

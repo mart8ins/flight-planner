@@ -18,11 +18,6 @@ public class AdminValidationsService {
     private Logger logger = LoggerFactory.getLogger(AdminValidationsService.class);
 
     public void validateRequest(List<Flight> flights, FlightRequest flightRequest, LocalDateTime departureTime, LocalDateTime arrivalTime){
-
-        logger.error("Flights no datu bāzes: " + flights);
-        logger.error("departureTime: " + departureTime);
-        logger.error("arrivalTime: " + arrivalTime);
-
         LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
         LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
 

@@ -30,7 +30,7 @@ public class CustomerFlightsController {
         return customerFlightsService.getFlightById(flightId);
     }
 
-    @PostMapping("flights/search") // receives body/object
+    @PostMapping("flights/search")
     public @ResponseBody SearchedFlightsResponse<Flight> searchFlights(@Valid @RequestBody SearchFlightRequest flight){
         return customerFlightsService.searchFlights(flight);
     }
