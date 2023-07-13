@@ -60,7 +60,7 @@ class CustomerFlightsControllerTest {
         int flightId = 1;
 
         FlightResponse expectedFlightResponse = new FlightResponse(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-02-12-00", "2023-06-04-12-00", 1);
+                "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00", 1);
 
         Mockito.when(customerFlightsService.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
@@ -72,7 +72,7 @@ class CustomerFlightsControllerTest {
         Assertions.assertEquals(String.valueOf(flightId), capturedFlightIdQuery);
         Assertions.assertEquals("Latvia", actualFlightResponse.getFrom().getCountry());
         Assertions.assertEquals("Estonia", actualFlightResponse.getTo().getCountry());
-        Assertions.assertEquals("2023-06-02-12-00", actualFlightResponse.getDepartureTime());
+        Assertions.assertEquals("2023-06-02 12:00", actualFlightResponse.getDepartureTime());
         Assertions.assertEquals(flightId, actualFlightResponse.getId());
     }
 
