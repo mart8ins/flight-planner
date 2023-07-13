@@ -3,6 +3,7 @@ package io.codelex.flightplanner.flights.customer;
 import io.codelex.flightplanner.flights.FlightsRepository;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
+import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
 import org.junit.jupiter.api.Assertions;
@@ -120,4 +121,23 @@ class CustomerFlightsServiceTest {
         Assertions.assertEquals("BIX", actualAirportList.get(1).getAirport());
     }
 
+    @Test
+    void getFlightById(){
+        int flightId = 1;
+
+        // EXPECTED FLIGHT FROM DB WHAT IS RETURNED FROM REPOSITORY
+        LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
+        LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
+        Flight expectedFlightFromDB = new Flight(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+                "AirBaltic", departure, arrival, 1);
+        Mockito.when(flightsRepository.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDB);
+
+        FlightResponse flightResponse = customerFlightsService.getFlightById(String.valueOf(flightId));
+        Mockito.verify(flightsRepository).getFlightById(String.valueOf(flightId));
+
+        Assertions.assertEquals("Latvia", flightResponse.getFrom().getCountry());
+        Assertions.assertEquals("Estonia", flightResponse.getTo().getCountry());
+        Assertions.assertEquals("2023-06-02 12:00", flightResponse.getDepartureTime());
+        Assertions.assertEquals(flightId, flightResponse.getId());
+    }
 }
