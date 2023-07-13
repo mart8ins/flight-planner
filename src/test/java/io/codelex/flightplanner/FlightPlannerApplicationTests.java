@@ -9,11 +9,13 @@ import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.CustomerFlightsController;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
+import io.codelex.flightplanner.flights.testing.TestingController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,13 +31,16 @@ class FlightPlannerApplicationTests {
     @Autowired
     CustomerFlightsController customerFlightsController;
 
+    @Autowired
+    TestingController testingController;
+
     @BeforeEach
     void clearRepository(){
         flightsRepository.clearDatabase();
     }
 
     @Test
-    void AdminApiSaveReturnsSavedFlight() {
+    void AdminApiSavedAndReturnsSavedFlight() {
         Airport airport1 = new Airport("Latvia", "Riga", "RIX");
         Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
 
@@ -118,6 +123,22 @@ class FlightPlannerApplicationTests {
         Assertions.assertEquals(0,searchedFlightsResponse.getPage());
         Assertions.assertEquals(1,searchedFlightsResponse.getTotalItems());
         Assertions.assertEquals(flightResponse.getId(),searchedFlightsResponse.getItems().get(0).getId());
+    }
+
+    @Test
+    void TestingApiClearsDatabase(){
+        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
+        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
+
+        FlightRequest savedFlightRequest = new FlightRequest(airport1,airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
+        FlightResponse savedFlightResponse = adminFlightsController.saveFlight(savedFlightRequest);
+
+        testingController.clearDatabase();
+
+        List<Airport> returnedAirports = customerFlightsController.searchAirport("LAT");
+
+        Assertions.assertEquals(0, returnedAirports.size());
+        Assertions.assertThrows(ResponseStatusException.class, ()-> adminFlightsController.getFlightById(String.valueOf(savedFlightResponse.getId())));
     }
 
 }
