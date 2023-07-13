@@ -13,12 +13,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerFlightsServiceTest {
@@ -34,18 +32,14 @@ class CustomerFlightsServiceTest {
     void searchFlights() {
         // EXPECTED RETURNED VALUE
         SearchedFlightsResponse searchedFlightsResponse = new SearchedFlightsResponse(1,1,new ArrayList<Flight>());
-        LocalDateTime departure = LocalDateTime.of(2023, 06, 01, 12, 00);
-        LocalDateTime arrival = LocalDateTime.of(2023, 06, 02, 12, 00);
+        LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
+        LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
         Flight expectedFlight = new Flight(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
                 "AirBaltic", departure, arrival, 1);
         searchedFlightsResponse.setItems(Arrays.asList(expectedFlight));
 
-        // ACTUAL FLIGHT DATA IN RESPONSE ITEMS LIST
-        String countryFromExpected = expectedFlight.getFrom().getCountry();
-        String countryToExpected = expectedFlight.getTo().getCountry();
-
         // SEARCH FLIGHT REQUEST
-        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", "2023-06-01");
+        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", "2023-06-02");
 
         Mockito.when(flightsRepository.searchFlights(searchFlightRequest)).thenReturn(searchedFlightsResponse);
 
@@ -53,12 +47,13 @@ class CustomerFlightsServiceTest {
         Flight actualFlight = (Flight)actualResult.getItems().get(0);
 
         // CHECK RESPONSE OBJECT
-        Assertions.assertEquals(searchedFlightsResponse.getPage(), actualResult.getPage());
-        Assertions.assertEquals(searchedFlightsResponse.getTotalItems(), actualResult.getTotalItems());
-        Assertions.assertEquals(searchedFlightsResponse.getItems().size(), actualResult.getItems().size());
-        Assertions.assertEquals(searchedFlightsResponse.getItems().get(0), actualResult.getItems().get(0));
+        Assertions.assertEquals(1, actualResult.getPage());
+        Assertions.assertEquals(1, actualResult.getTotalItems());
+        Assertions.assertEquals(1, actualResult.getItems().size());
+        Assertions.assertEquals(expectedFlight, actualResult.getItems().get(0));
         // CHECK ACTUAL FLIGHT IN RESPONSE ITEMS OBJECT
-        Assertions.assertEquals(countryFromExpected, actualFlight.getFrom().getCountry());
-        Assertions.assertEquals(countryToExpected, actualFlight.getTo().getCountry());
+        Assertions.assertEquals("Latvia", actualFlight.getFrom().getCountry());
+        Assertions.assertEquals("Estonia", actualFlight.getTo().getCountry());
+        Assertions.assertEquals("2023-06-02", actualFlight.getDepartureTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 }
