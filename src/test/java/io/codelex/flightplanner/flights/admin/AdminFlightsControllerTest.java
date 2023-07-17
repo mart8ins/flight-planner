@@ -3,7 +3,7 @@ package io.codelex.flightplanner.flights.admin;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
-import io.codelex.flightplanner.flights.admin.service.InMemoryAdminFlightsService;
+import io.codelex.flightplanner.flights.admin.service.AdminFlightsServiceInMemory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class AdminFlightsControllerTest {
 
     @Mock
-    InMemoryAdminFlightsService inMemoryAdminFlightsService;
+    AdminFlightsServiceInMemory adminFlightsServiceInMemory;
 
     @InjectMocks
     AdminFlightsController adminFlightsController;
@@ -38,11 +38,11 @@ class AdminFlightsControllerTest {
         FlightResponse expectedFlightResponse = new FlightResponse(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
                 "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00", 1);
 
-        Mockito.when(inMemoryAdminFlightsService.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
+        Mockito.when(adminFlightsServiceInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
         FlightResponse actualFlightResponse = adminFlightsController.getFlightById(String.valueOf(flightId));
 
-        Mockito.verify(inMemoryAdminFlightsService).getFlightById(flightIdQueryCapture.capture());
+        Mockito.verify(adminFlightsServiceInMemory).getFlightById(flightIdQueryCapture.capture());
         String capturedFlightIdQuery = flightIdQueryCapture.getValue();
 
         Assertions.assertEquals(String.valueOf(flightId), capturedFlightIdQuery);
@@ -59,10 +59,10 @@ class AdminFlightsControllerTest {
         FlightResponse expectedFlightResponse = new FlightResponse(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
                 "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00", 1);
 
-        Mockito.when(inMemoryAdminFlightsService.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
+        Mockito.when(adminFlightsServiceInMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
         FlightResponse flightResponseActual = adminFlightsController.saveFlight(expectedFlightRequest);
 
-        Mockito.verify(inMemoryAdminFlightsService).saveFlight(flightRequestCapture.capture());
+        Mockito.verify(adminFlightsServiceInMemory).saveFlight(flightRequestCapture.capture());
         FlightRequest flightRequestCaptured = flightRequestCapture.getValue();
 
         Assertions.assertEquals(expectedFlightRequest, flightRequestCaptured);
@@ -75,10 +75,10 @@ class AdminFlightsControllerTest {
         String flightIdToDelete = "1";
         String expectedMessageAfterDelete = "Flight with id: " + flightIdToDelete + " removed from database.";
 
-        Mockito.when(inMemoryAdminFlightsService.deleteFlight(flightIdToDelete)).thenReturn(expectedMessageAfterDelete);
+        Mockito.when(adminFlightsServiceInMemory.deleteFlight(flightIdToDelete)).thenReturn(expectedMessageAfterDelete);
         String receivedMessageAfterDeletion = adminFlightsController.deleteFlight(flightIdToDelete);
 
-        Mockito.verify(inMemoryAdminFlightsService).deleteFlight(deleteFlightIdCapture.capture());
+        Mockito.verify(adminFlightsServiceInMemory).deleteFlight(deleteFlightIdCapture.capture());
         String capturedIdToDeleteFlight = deleteFlightIdCapture.getValue();
 
         Assertions.assertEquals(flightIdToDelete, capturedIdToDeleteFlight);

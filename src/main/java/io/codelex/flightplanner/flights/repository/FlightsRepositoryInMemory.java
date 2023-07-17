@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class InMemoryFlightsRepository {
+public class FlightsRepositoryInMemory {
     private List<Flight> flights = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
     AdminValidationsService adminValidationsService;
-    Logger logger = LoggerFactory.getLogger(InMemoryFlightsRepository.class);
+    Logger logger = LoggerFactory.getLogger(FlightsRepositoryInMemory.class);
 
-    public InMemoryFlightsRepository(AdminValidationsService adminValidationsService) {
+    public FlightsRepositoryInMemory(AdminValidationsService adminValidationsService) {
         this.adminValidationsService = adminValidationsService;
     }
 
