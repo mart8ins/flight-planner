@@ -1,6 +1,6 @@
-package io.codelex.flightplanner.flights.customer;
+package io.codelex.flightplanner.flights.customer.service;
 
-import io.codelex.flightplanner.flights.FlightsRepository;
+import io.codelex.flightplanner.flights.repository.InMemoryFlightsRepository;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CustomerFlightsService {
+public class InMemoryCustomerFlightsService implements CustomerFlightsService {
 
-    private FlightsRepository flightsRepository;
+    private InMemoryFlightsRepository inMemoryFlightsRepository;
 
-    public CustomerFlightsService(FlightsRepository flightsRepository) {
-        this.flightsRepository = flightsRepository;
+    public InMemoryCustomerFlightsService(InMemoryFlightsRepository inMemoryFlightsRepository) {
+        this.inMemoryFlightsRepository = inMemoryFlightsRepository;
     }
 
     public List<Airport> searchAirport(String airportSearchQuery){
-        return flightsRepository.searchAirport(airportSearchQuery);
+        return inMemoryFlightsRepository.searchAirport(airportSearchQuery);
     }
 
     public FlightResponse getFlightById(String flightId) {
-        Flight flightFromDatabase = flightsRepository.getFlightById(flightId);
+        Flight flightFromDatabase = inMemoryFlightsRepository.getFlightById(flightId);
 
         String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
         String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
@@ -34,6 +34,6 @@ public class CustomerFlightsService {
     }
 
     public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
-        return flightsRepository.searchFlights(flight);
+        return inMemoryFlightsRepository.searchFlights(flight);
     }
 }

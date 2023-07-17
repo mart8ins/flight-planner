@@ -1,5 +1,6 @@
 package io.codelex.flightplanner.flights.testing;
 
+import io.codelex.flightplanner.flights.testing.service.InMemoryTestingService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,14 +9,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("testing-api/")
 public class TestingController {
 
-    private TestingService testingService;
+    private InMemoryTestingService inMemoryTestingService;
 
-    public TestingController(TestingService testingService){
-        this.testingService = testingService;
+    public TestingController(InMemoryTestingService inMemoryTestingService){
+        this.inMemoryTestingService = inMemoryTestingService;
     }
 
     @PostMapping("clear")
     public void clearDatabase() {
-        testingService.clearDatabase();
+        inMemoryTestingService.clearDatabase();
     }
 }

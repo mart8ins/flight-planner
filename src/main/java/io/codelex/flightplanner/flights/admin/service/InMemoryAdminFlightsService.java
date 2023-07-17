@@ -1,6 +1,6 @@
-package io.codelex.flightplanner.flights.admin;
+package io.codelex.flightplanner.flights.admin.service;
 
-import io.codelex.flightplanner.flights.FlightsRepository;
+import io.codelex.flightplanner.flights.repository.InMemoryFlightsRepository;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
@@ -8,16 +8,16 @@ import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminFlightsService {
+public class InMemoryAdminFlightsService implements AdminFlightService {
 
-    private FlightsRepository flightsRepository;
+    private InMemoryFlightsRepository inMemoryFlightsRepository;
 
-    public AdminFlightsService(FlightsRepository flightsRepository) {
-        this.flightsRepository = flightsRepository;
+    public InMemoryAdminFlightsService(InMemoryFlightsRepository inMemoryFlightsRepository) {
+        this.inMemoryFlightsRepository = inMemoryFlightsRepository;
     }
 
     public FlightResponse getFlightById(String flightId) {
-        Flight flightFromDatabase = flightsRepository.getFlightById(flightId);
+        Flight flightFromDatabase = inMemoryFlightsRepository.getFlightById(flightId);
 
         String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
         String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
@@ -27,10 +27,10 @@ public class AdminFlightsService {
     }
 
     public FlightResponse saveFlight(FlightRequest flightRequest) {
-        return flightsRepository.saveFlight(flightRequest);
+        return inMemoryFlightsRepository.saveFlight(flightRequest);
     }
 
     public String deleteFlight(String flightId) {
-        return flightsRepository.deleteFlight(flightId);
+        return inMemoryFlightsRepository.deleteFlight(flightId);
     }
 }

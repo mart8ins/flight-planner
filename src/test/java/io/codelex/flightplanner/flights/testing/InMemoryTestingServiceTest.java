@@ -1,5 +1,6 @@
 package io.codelex.flightplanner.flights.testing;
 
+import io.codelex.flightplanner.flights.repository.InMemoryFlightsRepository;
 import io.codelex.flightplanner.flights.testing.service.InMemoryTestingService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,19 +9,18 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 @ExtendWith(MockitoExtension.class)
-class TestingControllerTest {
+class InMemoryTestingServiceTest {
 
     @Mock
-    InMemoryTestingService inMemoryTestingService;
+    InMemoryFlightsRepository inMemoryFlightsRepository;
 
     @InjectMocks
-    TestingController testingController;
+    InMemoryTestingService inMemoryTestingService;
 
     @Test
     void clearDatabase() {
-        testingController.clearDatabase();
-        Mockito.verify(inMemoryTestingService).clearDatabase();
+        inMemoryTestingService.clearDatabase();
+        Mockito.verify(inMemoryFlightsRepository).clearDatabase();
     }
 }
