@@ -1,6 +1,6 @@
-package io.codelex.flightplanner.flights;
+package io.codelex.flightplanner.flights.repository;
 
-import io.codelex.flightplanner.flights.admin.AdminValidationsService;
+import io.codelex.flightplanner.flights.admin.service.AdminValidationsService;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class FlightsRepository {
+public class InMemoryFlightsRepository {
     private List<Flight> flights = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
     AdminValidationsService adminValidationsService;
-    Logger logger = LoggerFactory.getLogger(FlightsRepository.class);
+    Logger logger = LoggerFactory.getLogger(InMemoryFlightsRepository.class);
 
-    public FlightsRepository(AdminValidationsService adminValidationsService) {
+    public InMemoryFlightsRepository(AdminValidationsService adminValidationsService) {
         this.adminValidationsService = adminValidationsService;
     }
 

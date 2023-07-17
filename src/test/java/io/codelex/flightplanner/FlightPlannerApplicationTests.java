@@ -1,6 +1,6 @@
 package io.codelex.flightplanner;
 
-import io.codelex.flightplanner.flights.FlightsRepository;
+import io.codelex.flightplanner.flights.repository.InMemoryFlightsRepository;
 import io.codelex.flightplanner.flights.admin.AdminFlightsController;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
@@ -23,7 +23,7 @@ import java.util.List;
 class FlightPlannerApplicationTests {
 
     @Autowired
-    FlightsRepository flightsRepository;
+    InMemoryFlightsRepository inMemoryFlightsRepository;
 
     @Autowired
     AdminFlightsController adminFlightsController;
@@ -36,7 +36,7 @@ class FlightPlannerApplicationTests {
 
     @BeforeEach
     void clearRepository(){
-        flightsRepository.clearDatabase();
+        inMemoryFlightsRepository.clearDatabase();
     }
 
     @Test

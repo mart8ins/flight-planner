@@ -1,4 +1,4 @@
-package io.codelex.flightplanner.flights.admin;
+package io.codelex.flightplanner.flights.admin.service;
 
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;

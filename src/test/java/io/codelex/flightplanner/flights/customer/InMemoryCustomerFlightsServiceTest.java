@@ -1,6 +1,7 @@
 package io.codelex.flightplanner.flights.customer;
 
-import io.codelex.flightplanner.flights.FlightsRepository;
+import io.codelex.flightplanner.flights.customer.service.InMemoryCustomerFlightsService;
+import io.codelex.flightplanner.flights.repository.InMemoryFlightsRepository;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
@@ -21,13 +22,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class CustomerFlightsServiceTest {
+class InMemoryCustomerFlightsServiceTest {
 
     @Mock
-    FlightsRepository flightsRepository;
+    InMemoryFlightsRepository inMemoryFlightsRepository;
 
     @InjectMocks
-    CustomerFlightsService customerFlightsService;
+    InMemoryCustomerFlightsService inMemoryCustomerFlightsService;
 
     @Test
     @DisplayName("Searched flights is found and returned.")
@@ -43,9 +44,9 @@ class CustomerFlightsServiceTest {
         // SEARCH FLIGHT REQUEST
         SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", "2023-06-02");
 
-        Mockito.when(flightsRepository.searchFlights(searchFlightRequest)).thenReturn(searchedFlightsResponse);
+        Mockito.when(inMemoryFlightsRepository.searchFlights(searchFlightRequest)).thenReturn(searchedFlightsResponse);
 
-        SearchedFlightsResponse actualResult = customerFlightsService.searchFlights(searchFlightRequest);
+        SearchedFlightsResponse actualResult = inMemoryCustomerFlightsService.searchFlights(searchFlightRequest);
         Flight actualFlight = (Flight)actualResult.getItems().get(0);
 
         // CHECK RESPONSE OBJECT
@@ -67,9 +68,9 @@ class CustomerFlightsServiceTest {
         Airport airport1 = new Airport("Latvia", "Riga", "RIX");
         List<Airport> expextedAirportList = List.of(airport1);
 
-        Mockito.when(flightsRepository.searchAirport(searchQuery)).thenReturn(expextedAirportList);
+        Mockito.when(inMemoryFlightsRepository.searchAirport(searchQuery)).thenReturn(expextedAirportList);
 
-        List<Airport> actualAirportList = customerFlightsService.searchAirport(searchQuery);
+        List<Airport> actualAirportList = inMemoryCustomerFlightsService.searchAirport(searchQuery);
 
         Assertions.assertEquals(1, actualAirportList.size());
         Assertions.assertEquals("Latvia", actualAirportList.get(0).getCountry());
@@ -86,9 +87,9 @@ class CustomerFlightsServiceTest {
         Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
         List<Airport> expextedAirportList = List.of(airport1, airport2);
 
-        Mockito.when(flightsRepository.searchAirport(searchQuery)).thenReturn(expextedAirportList);
+        Mockito.when(inMemoryFlightsRepository.searchAirport(searchQuery)).thenReturn(expextedAirportList);
 
-        List<Airport> actualAirportList = customerFlightsService.searchAirport(searchQuery);
+        List<Airport> actualAirportList = inMemoryCustomerFlightsService.searchAirport(searchQuery);
 
         Assertions.assertEquals(2, actualAirportList.size());
         Assertions.assertEquals("Latvia", actualAirportList.get(0).getCountry());
@@ -108,9 +109,9 @@ class CustomerFlightsServiceTest {
         Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
         List<Airport> expextedAirportList = List.of(airport1, airport2);
 
-        Mockito.when(flightsRepository.searchAirport(searchQuery)).thenReturn(expextedAirportList);
+        Mockito.when(inMemoryFlightsRepository.searchAirport(searchQuery)).thenReturn(expextedAirportList);
 
-        List<Airport> actualAirportList = customerFlightsService.searchAirport(searchQuery);
+        List<Airport> actualAirportList = inMemoryCustomerFlightsService.searchAirport(searchQuery);
 
         Assertions.assertEquals(2, actualAirportList.size());
         Assertions.assertEquals("Latvia", actualAirportList.get(0).getCountry());
@@ -130,10 +131,10 @@ class CustomerFlightsServiceTest {
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
         Flight expectedFlightFromDB = new Flight(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
                 "AirBaltic", departure, arrival, 1);
-        Mockito.when(flightsRepository.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDB);
+        Mockito.when(inMemoryFlightsRepository.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDB);
 
-        FlightResponse flightResponse = customerFlightsService.getFlightById(String.valueOf(flightId));
-        Mockito.verify(flightsRepository).getFlightById(String.valueOf(flightId));
+        FlightResponse flightResponse = inMemoryCustomerFlightsService.getFlightById(String.valueOf(flightId));
+        Mockito.verify(inMemoryFlightsRepository).getFlightById(String.valueOf(flightId));
 
         Assertions.assertEquals("Latvia", flightResponse.getFrom().getCountry());
         Assertions.assertEquals("Estonia", flightResponse.getTo().getCountry());
