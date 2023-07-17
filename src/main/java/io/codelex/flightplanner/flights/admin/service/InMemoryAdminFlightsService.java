@@ -5,9 +5,7 @@ import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
-import org.springframework.stereotype.Service;
 
-@Service
 public class InMemoryAdminFlightsService implements AdminFlightService {
 
     private InMemoryFlightsRepository inMemoryFlightsRepository;
