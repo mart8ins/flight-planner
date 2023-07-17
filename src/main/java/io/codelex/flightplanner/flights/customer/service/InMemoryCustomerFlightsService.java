@@ -7,11 +7,9 @@ import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public class InMemoryCustomerFlightsService implements CustomerFlightsService {
 
     private InMemoryFlightsRepository inMemoryFlightsRepository;
