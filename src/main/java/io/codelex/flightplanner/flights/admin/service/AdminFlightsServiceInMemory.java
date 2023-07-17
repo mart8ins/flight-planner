@@ -1,21 +1,21 @@
 package io.codelex.flightplanner.flights.admin.service;
 
-import io.codelex.flightplanner.flights.repository.InMemoryFlightsRepository;
+import io.codelex.flightplanner.flights.repository.FlightsRepositoryInMemory;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 
-public class InMemoryAdminFlightsService implements AdminFlightService {
+public class AdminFlightsServiceInMemory implements AdminFlightService {
 
-    private InMemoryFlightsRepository inMemoryFlightsRepository;
+    private FlightsRepositoryInMemory flightsRepositoryInMemory;
 
-    public InMemoryAdminFlightsService(InMemoryFlightsRepository inMemoryFlightsRepository) {
-        this.inMemoryFlightsRepository = inMemoryFlightsRepository;
+    public AdminFlightsServiceInMemory(FlightsRepositoryInMemory flightsRepositoryInMemory) {
+        this.flightsRepositoryInMemory = flightsRepositoryInMemory;
     }
 
     public FlightResponse getFlightById(String flightId) {
-        Flight flightFromDatabase = inMemoryFlightsRepository.getFlightById(flightId);
+        Flight flightFromDatabase = flightsRepositoryInMemory.getFlightById(flightId);
 
         String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
         String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
@@ -25,10 +25,10 @@ public class InMemoryAdminFlightsService implements AdminFlightService {
     }
 
     public FlightResponse saveFlight(FlightRequest flightRequest) {
-        return inMemoryFlightsRepository.saveFlight(flightRequest);
+        return flightsRepositoryInMemory.saveFlight(flightRequest);
     }
 
     public String deleteFlight(String flightId) {
-        return inMemoryFlightsRepository.deleteFlight(flightId);
+        return flightsRepositoryInMemory.deleteFlight(flightId);
     }
 }
