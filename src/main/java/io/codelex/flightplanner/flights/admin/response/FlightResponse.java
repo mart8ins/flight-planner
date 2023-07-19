@@ -8,23 +8,23 @@ public class FlightResponse {
 
     private int id;
 
-    private Airport from;
-
-    private Airport to;
-
     private String carrier;
 
     private String departureTime;
 
     private String arrivalTime;
 
-    public FlightResponse(int id, Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
+    private Airport from;
+
+    private Airport to;
+
+    public FlightResponse(int id, String carrier, String departureTime, String arrivalTime, Airport from, Airport to) {
         this.id = id;
-        this.from = from;
-        this.to = to;
         this.carrier = carrier;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.from = from;
+        this.to = to;
     }
 
     public int getId() {
@@ -33,22 +33,6 @@ public class FlightResponse {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Airport getFrom() {
-        return from;
-    }
-
-    public void setFrom(Airport from) {
-        this.from = from;
-    }
-
-    public Airport getTo() {
-        return to;
-    }
-
-    public void setTo(Airport to) {
-        this.to = to;
     }
 
     public String getCarrier() {
@@ -75,15 +59,31 @@ public class FlightResponse {
         this.arrivalTime = arrivalTime;
     }
 
+    public Airport getFrom() {
+        return from;
+    }
+
+    public void setFrom(Airport from) {
+        this.from = from;
+    }
+
+    public Airport getTo() {
+        return to;
+    }
+
+    public void setTo(Airport to) {
+        this.to = to;
+    }
+
     @Override
     public String toString() {
         return "FlightResponse{" +
                 "id=" + id +
-                ", from=" + from +
-                ", to=" + to +
                 ", carrier='" + carrier + '\'' +
                 ", departureTime='" + departureTime + '\'' +
                 ", arrivalTime='" + arrivalTime + '\'' +
+                ", from=" + from +
+                ", to=" + to +
                 '}';
     }
 
@@ -92,11 +92,11 @@ public class FlightResponse {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FlightResponse that = (FlightResponse) o;
-        return id == that.id && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(carrier, that.carrier) && Objects.equals(departureTime, that.departureTime) && Objects.equals(arrivalTime, that.arrivalTime);
+        return id == that.id && Objects.equals(carrier, that.carrier) && Objects.equals(departureTime, that.departureTime) && Objects.equals(arrivalTime, that.arrivalTime) && Objects.equals(from, that.from) && Objects.equals(to, that.to);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, from, to, carrier, departureTime, arrivalTime);
+        return Objects.hash(id, carrier, departureTime, arrivalTime, from, to);
     }
 }

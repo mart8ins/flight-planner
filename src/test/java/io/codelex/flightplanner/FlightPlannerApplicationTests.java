@@ -41,11 +41,11 @@ class FlightPlannerApplicationTests {
 
     @Test
     void AdminApiSavedAndReturnsSavedFlight() {
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
-        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
+        Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest savedFlightRequest = new FlightRequest(airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
-        FlightResponse expectedFlightResponse = new FlightResponse(1, airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
+        FlightRequest savedFlightRequest = new FlightRequest("AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightResponse expectedFlightResponse = new FlightResponse(1, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         FlightResponse savedFlightResponse = adminFlightsController.saveFlight(savedFlightRequest);
 
         Assertions.assertEquals(expectedFlightResponse, savedFlightResponse);
@@ -53,10 +53,10 @@ class FlightPlannerApplicationTests {
 
     @Test
     void AdminApiFindsFlightById() {
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
-        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
+        Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave = new FlightRequest(airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
+        FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         FlightResponse returnedFlightResponse = adminFlightsController.saveFlight(flightToSave);
         FlightResponse foundFlightByID = adminFlightsController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
 
@@ -65,10 +65,10 @@ class FlightPlannerApplicationTests {
 
     @Test
     void AdminApiDeletesFlight() {
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
-        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
+        Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave = new FlightRequest(airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
+        FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         FlightResponse returnedFlightResponse = adminFlightsController.saveFlight(flightToSave);
         String deleteFlightResponse = adminFlightsController.deleteFlight(String.valueOf(returnedFlightResponse.getId()));
 
@@ -79,10 +79,10 @@ class FlightPlannerApplicationTests {
 
     @Test
     void CustomerApiSearchAirport() {
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
-        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
+        Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave1 = new FlightRequest(airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
+        FlightRequest flightToSave1 = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         adminFlightsController.saveFlight(flightToSave1);
 
         List<Airport> foundAirportsCountryNamePart = customerFlightsController.searchAirport("LAT");
@@ -97,10 +97,10 @@ class FlightPlannerApplicationTests {
 
     @Test
     void CustomerApiFindFlightById(){
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
-        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
+        Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave = new FlightRequest(airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
+        FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         FlightResponse returnedFlightResponse = adminFlightsController.saveFlight(flightToSave);
         FlightResponse foundFlightByID = customerFlightsController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
 
@@ -110,12 +110,12 @@ class FlightPlannerApplicationTests {
     @Test
     void CustomerApiSearchFlights(){
         SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "BIX", "2023-06-02");
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
-        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
-        Airport airport3 = new Airport("Sweden", "Oslo", "OSL");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
+        Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
+        Airport airport3 = new Airport("OSL", "Sweden", "Oslo");
 
-        FlightRequest flightToSave1 = new FlightRequest(airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
-        FlightRequest flightToSave2 = new FlightRequest(airport3, airport2, "SwedenBaltic","2023-06-03 12:00","2023-06-05 12:00");
+        FlightRequest flightToSave1 = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightRequest flightToSave2 = new FlightRequest("SwedenBaltic","2023-06-03 12:00","2023-06-05 12:00", airport3, airport2);
         FlightResponse flightResponse = adminFlightsController.saveFlight(flightToSave1);
         adminFlightsController.saveFlight(flightToSave2);
 
@@ -127,10 +127,10 @@ class FlightPlannerApplicationTests {
 
     @Test
     void TestingApiClearsDatabase(){
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
-        Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
+        Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest savedFlightRequest = new FlightRequest(airport1, airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
+        FlightRequest savedFlightRequest = new FlightRequest("AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         FlightResponse savedFlightResponse = adminFlightsController.saveFlight(savedFlightRequest);
 
         testingController.clearDatabase();

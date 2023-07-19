@@ -40,7 +40,7 @@ class CustomerFlightsControllerTest {
     void searchAirport() {
         String searchQuery = "Lat";
 
-        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
+        Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         List<Airport> expextedAirportListInMemory = List.of(airport1);
 
         Mockito.when(customerFlightsServiceInMemory.searchAirport(searchQuery)).thenReturn(expextedAirportListInMemory);
@@ -60,8 +60,8 @@ class CustomerFlightsControllerTest {
     void getFlightById() {
         int flightId = 1;
 
-        FlightResponse expectedFlightResponse = new FlightResponse(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00");
+        FlightResponse expectedFlightResponse = new FlightResponse(1,
+                "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00", new Airport("RIX", "Latvia", "Riga"), new Airport("EENA", "Estonia", "Narva" ));
 
         Mockito.when(customerFlightsServiceInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
@@ -82,8 +82,8 @@ class CustomerFlightsControllerTest {
         SearchedFlightsResponse searchedFlightsResponse = new SearchedFlightsResponse(1,1,new ArrayList<Flight>());
         LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
-        Flight expectedFlight = new Flight(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", departure, arrival);
+        Flight expectedFlight = new Flight(1,
+                "AirBaltic", departure, arrival, new Airport("RIX", "Latvia", "Riga" ), new Airport("EENA", "Estonia", "Narva"));
         searchedFlightsResponse.setItems(Arrays.asList(expectedFlight));
 
         SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", "2023-06-02");

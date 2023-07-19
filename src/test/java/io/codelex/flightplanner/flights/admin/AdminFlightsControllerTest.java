@@ -35,8 +35,8 @@ class AdminFlightsControllerTest {
     void getFlightById() {
         int flightId = 1;
 
-        FlightResponse expectedFlightResponse = new FlightResponse(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00");
+        FlightResponse expectedFlightResponse = new FlightResponse(1,
+                "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00", new Airport("RIX", "Latvia", "Riga" ), new Airport("EENA", "Estonia", "Narva"));
 
         Mockito.when(adminFlightsServiceInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
@@ -54,10 +54,10 @@ class AdminFlightsControllerTest {
 
     @Test
     void saveFlight() {
-        FlightRequest expectedFlightRequest = new FlightRequest(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00");
-        FlightResponse expectedFlightResponse = new FlightResponse(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00");
+        FlightRequest expectedFlightRequest = new FlightRequest(
+                "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00",new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
+        FlightResponse expectedFlightResponse = new FlightResponse(1,
+                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00", new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
 
         Mockito.when(adminFlightsServiceInMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
         FlightResponse flightResponseActual = adminFlightsController.saveFlight(expectedFlightRequest);

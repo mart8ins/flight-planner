@@ -56,7 +56,7 @@ public class FlightsRepositoryInMemory {
 
         String departureDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getDepartureTime());
         String arrivalDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getArrivalTime());
-        return new FlightResponse(flightToSave.getId(), flightToSave.getFrom(), flightToSave.getTo(), flightToSave.getCarrier(), departureDateTimeString, arrivalDateTimeString);
+        return new FlightResponse(flightToSave.getId(), flightToSave.getCarrier(), departureDateTimeString, arrivalDateTimeString, flightToSave.getFrom(), flightToSave.getTo());
     }
 
     public synchronized String deleteFlight(String flightId) {

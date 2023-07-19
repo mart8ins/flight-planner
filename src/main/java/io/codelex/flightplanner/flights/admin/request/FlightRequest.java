@@ -6,12 +6,6 @@ import jakarta.validation.constraints.*;
 
 public class FlightRequest {
     @NotNull
-    @Valid
-    private Airport from;
-    @NotNull
-    @Valid
-    private Airport to;
-    @NotNull
     @NotEmpty
     private String carrier;
     @NotNull
@@ -21,29 +15,21 @@ public class FlightRequest {
     @NotEmpty
     private String arrivalTime;
 
-    public FlightRequest(Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
-        this.from = from;
-        this.to = to;
+    @NotNull
+    @Valid
+    private Airport from;
+    @NotNull
+    @Valid
+    private Airport to;
+
+    public FlightRequest(String carrier, String departureTime, String arrivalTime, Airport from, Airport to) {
         this.carrier = carrier;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
-    }
-
-    public Airport getFrom() {
-        return from;
-    }
-
-    public void setFrom(Airport from) {
         this.from = from;
-    }
-
-    public Airport getTo() {
-        return to;
-    }
-
-    public void setTo(Airport to) {
         this.to = to;
     }
+
 
     public String getCarrier() {
         return carrier;
@@ -69,14 +55,30 @@ public class FlightRequest {
         this.arrivalTime = arrivalTime;
     }
 
+    public Airport getFrom() {
+        return from;
+    }
+
+    public void setFrom(Airport from) {
+        this.from = from;
+    }
+
+    public Airport getTo() {
+        return to;
+    }
+
+    public void setTo(Airport to) {
+        this.to = to;
+    }
+
     @Override
     public String toString() {
-        return "AddFlightRequest{" +
-                "from=" + from +
-                ", to=" + to +
-                ", carrier='" + carrier + '\'' +
+        return "FlightRequest{" +
+                "carrier='" + carrier + '\'' +
                 ", departureTime='" + departureTime + '\'' +
                 ", arrivalTime='" + arrivalTime + '\'' +
+                ", from=" + from +
+                ", to=" + to +
                 '}';
     }
 }
