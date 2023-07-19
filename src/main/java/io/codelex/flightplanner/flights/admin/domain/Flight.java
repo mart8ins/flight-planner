@@ -10,14 +10,15 @@ import java.util.Objects;
 public class Flight {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+//    @GeneratedValue(strategy= GenerationType.SEQUENCE)
     @Column(name="flight_id")
     private int id;
 
     private String carrier;
 
+    @Column(name="departure_time")
     private LocalDateTime departureTime;
-
+    @Column(name="arrival_time")
     private LocalDateTime arrivalTime;
 
     @OneToOne
@@ -31,6 +32,14 @@ public class Flight {
 
     public Flight(int id, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime, Airport from, Airport to) {
         this.id = id;
+        this.carrier = carrier;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
+        this.from = from;
+        this.to = to;
+    }
+
+    public Flight(String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime, Airport from, Airport to) {
         this.carrier = carrier;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -88,16 +97,15 @@ public class Flight {
 
     @Override
     public String toString() {
-        return "FlightInDatabase{" +
+        return "Flight{" +
                 "id=" + id +
                 ", carrier='" + carrier + '\'' +
                 ", departureTime=" + departureTime +
                 ", arrivalTime=" + arrivalTime +
-                ", from='" + from + '\'' +
-                ", to='" + to + '\'' +
+                ", from=" + from +
+                ", to=" + to +
                 '}';
     }
-
 
     @Override
     public boolean equals(Object o) {
