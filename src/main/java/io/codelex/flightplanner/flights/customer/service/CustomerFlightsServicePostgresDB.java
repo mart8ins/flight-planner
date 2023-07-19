@@ -1,7 +1,7 @@
 package io.codelex.flightplanner.flights.customer.service;
 
-import io.codelex.flightplanner.flights.admin.domain.inMemory.AirportInMemory;
-import io.codelex.flightplanner.flights.admin.domain.inMemory.FlightInMemory;
+import io.codelex.flightplanner.flights.admin.domain.Airport;
+import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
@@ -17,7 +17,7 @@ public class CustomerFlightsServicePostgresDB implements CustomerFlightsService{
         this.flightsRepositoryPostgresDB = flightsRepositoryPostgresDB;
     }
 
-    public List<AirportInMemory> searchAirport(String airportSearchQuery) {
+    public List<Airport> searchAirport(String airportSearchQuery) {
         return null;
     }
 
@@ -26,7 +26,7 @@ public class CustomerFlightsServicePostgresDB implements CustomerFlightsService{
         return null;
     }
 
-    public SearchedFlightsResponse<FlightInMemory> searchFlights(SearchFlightRequest flight) {
+    public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
         return null;
     }
 }

@@ -1,7 +1,7 @@
 package io.codelex.flightplanner.flights.customer;
 
-import io.codelex.flightplanner.flights.admin.domain.inMemory.AirportInMemory;
-import io.codelex.flightplanner.flights.admin.domain.inMemory.FlightInMemory;
+import io.codelex.flightplanner.flights.admin.domain.Airport;
+import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
@@ -22,7 +22,7 @@ public class CustomerFlightsController {
     }
 
     @GetMapping("airports")
-    public List<AirportInMemory> searchAirport(@RequestParam String search){
+    public List<Airport> searchAirport(@RequestParam String search){
         return customerFlightsService.searchAirport(search);
     }
 
@@ -32,7 +32,7 @@ public class CustomerFlightsController {
     }
 
     @PostMapping("flights/search")
-    public @ResponseBody SearchedFlightsResponse<FlightInMemory> searchFlights(@Valid @RequestBody SearchFlightRequest flight){
+    public @ResponseBody SearchedFlightsResponse<Flight> searchFlights(@Valid @RequestBody SearchFlightRequest flight){
         return customerFlightsService.searchFlights(flight);
     }
 }

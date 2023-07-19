@@ -1,7 +1,7 @@
 package io.codelex.flightplanner.flights.admin.service;
 
 import io.codelex.flightplanner.flights.repository.inMemory.FlightsRepositoryInMemory;
-import io.codelex.flightplanner.flights.admin.domain.inMemory.FlightInMemory;
+import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
@@ -15,12 +15,12 @@ public class AdminFlightsServiceInMemory implements AdminFlightService {
     }
 
     public FlightResponse getFlightById(String flightId) {
-        FlightInMemory flightInMemoryFromDatabase = flightsRepositoryInMemory.getFlightById(flightId);
+        Flight flightFromDatabase = flightsRepositoryInMemory.getFlightById(flightId);
 
-        String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightInMemoryFromDatabase.getDepartureTime());
-        String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightInMemoryFromDatabase.getArrivalTime());
+        String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
+        String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
 
-        return new FlightResponse(flightInMemoryFromDatabase.getId(), flightInMemoryFromDatabase.getFrom(), flightInMemoryFromDatabase.getTo(), flightInMemoryFromDatabase.getCarrier(),
+        return new FlightResponse(flightFromDatabase.getId(), flightFromDatabase.getFrom(), flightFromDatabase.getTo(), flightFromDatabase.getCarrier(),
                 departureDateTime, arrivalDateTime);
     }
 

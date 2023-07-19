@@ -1,27 +1,33 @@
-package io.codelex.flightplanner.flights.admin.domain.inDatabasePostgres;
+package io.codelex.flightplanner.flights.admin.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
 @Entity(name="airport")
 @Table(name="airports")
-public class AirportInDatabase {
+public class Airport {
 
     @Id
     @Column(name = "airport_id")
+    @NotNull
+    @NotEmpty
     private String airport;
-
+    @NotNull
+    @NotEmpty
     private String country;
-
+    @NotNull
+    @NotEmpty
     private String city;
 
-    protected AirportInDatabase(){};
+    protected Airport(){};
 
-    public AirportInDatabase(String airport, String country, String city) {
+    public Airport(String airport, String country, String city) {
         this.airport = airport;
         this.country = country;
         this.city = city;
@@ -64,8 +70,8 @@ public class AirportInDatabase {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AirportInDatabase that = (AirportInDatabase) o;
-        return Objects.equals(airport, that.airport) && Objects.equals(country, that.country) && Objects.equals(city, that.city);
+        Airport airport1 = (Airport) o;
+        return Objects.equals(airport, airport1.airport) && Objects.equals(country, airport1.country) && Objects.equals(city, airport1.city);
     }
 
     @Override
