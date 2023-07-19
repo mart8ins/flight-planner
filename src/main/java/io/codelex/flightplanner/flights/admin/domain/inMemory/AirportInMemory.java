@@ -1,11 +1,11 @@
-package io.codelex.flightplanner.flights.admin.domain;
+package io.codelex.flightplanner.flights.admin.domain.inMemory;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
-public class Airport {
+public class AirportInMemory {
     @NotNull
     @NotEmpty
     private String country;
@@ -16,7 +16,7 @@ public class Airport {
     @NotEmpty
     private String airport;
 
-    public Airport(String country, String city, String airport) {
+    public AirportInMemory(String country, String city, String airport) {
         this.country = country;
         this.city = city;
         this.airport = airport;
@@ -50,8 +50,8 @@ public class Airport {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Airport airport1 = (Airport) o;
-        return Objects.equals(country, airport1.country) && Objects.equals(city, airport1.city) && Objects.equals(airport, airport1.airport);
+        AirportInMemory airportInMemory1 = (AirportInMemory) o;
+        return Objects.equals(country, airportInMemory1.country) && Objects.equals(city, airportInMemory1.city) && Objects.equals(airport, airportInMemory1.airport);
     }
 
     @Override

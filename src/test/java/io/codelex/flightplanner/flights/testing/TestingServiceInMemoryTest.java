@@ -1,6 +1,6 @@
 package io.codelex.flightplanner.flights.testing;
 
-import io.codelex.flightplanner.flights.repository.FlightsRepositoryInMemory;
+import io.codelex.flightplanner.flights.repository.inMemory.FlightsRepositoryInMemory;
 import io.codelex.flightplanner.flights.testing.service.TestingServiceInMemory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
