@@ -1,15 +1,18 @@
-package io.codelex.flightplanner.flights.admin.domain.inMemory;
+package io.codelex.flightplanner.flights.admin.domain;
+
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class FlightInMemory {
+@Entity(name="flight")
+@Table(name="flights")
+public class Flight {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    @Column(name="flight_id")
     private int id;
-
-    private AirportInMemory from;
-
-    private AirportInMemory to;
 
     private String carrier;
 
@@ -17,13 +20,22 @@ public class FlightInMemory {
 
     private LocalDateTime arrivalTime;
 
-    public FlightInMemory(int id, AirportInMemory from, AirportInMemory to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime) {
+    @OneToOne
+    @JoinColumn(name = "airport_from_id", referencedColumnName = "airport_id")
+    private Airport from;
+    @OneToOne
+    @JoinColumn(name = "airport_to_id", referencedColumnName = "airport_id")
+    private Airport to;
+
+    protected Flight(){};
+
+    public Flight(int id, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime, Airport from, Airport to) {
         this.id = id;
-        this.from = from;
-        this.to = to;
         this.carrier = carrier;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+        this.from = from;
+        this.to = to;
     }
 
     public int getId() {
@@ -32,22 +44,6 @@ public class FlightInMemory {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public AirportInMemory getFrom() {
-        return from;
-    }
-
-    public void setFrom(AirportInMemory from) {
-        this.from = from;
-    }
-
-    public AirportInMemory getTo() {
-        return to;
-    }
-
-    public void setTo(AirportInMemory to) {
-        this.to = to;
     }
 
     public String getCarrier() {
@@ -74,28 +70,45 @@ public class FlightInMemory {
         this.arrivalTime = arrivalTime;
     }
 
+    public Airport getFrom() {
+        return from;
+    }
+
+    public void setFrom(Airport from) {
+        this.from = from;
+    }
+
+    public Airport getTo() {
+        return to;
+    }
+
+    public void setTo(Airport to) {
+        this.to = to;
+    }
+
     @Override
     public String toString() {
-        return "Flight{" +
+        return "FlightInDatabase{" +
                 "id=" + id +
-                ", from=" + from +
-                ", to=" + to +
                 ", carrier='" + carrier + '\'' +
                 ", departureTime=" + departureTime +
                 ", arrivalTime=" + arrivalTime +
+                ", from='" + from + '\'' +
+                ", to='" + to + '\'' +
                 '}';
     }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FlightInMemory flightInMemory = (FlightInMemory) o;
-        return id == flightInMemory.id && Objects.equals(from, flightInMemory.from) && Objects.equals(to, flightInMemory.to) && Objects.equals(carrier, flightInMemory.carrier) && Objects.equals(departureTime, flightInMemory.departureTime) && Objects.equals(arrivalTime, flightInMemory.arrivalTime);
+        Flight flight = (Flight) o;
+        return id == flight.id && Objects.equals(carrier, flight.carrier) && Objects.equals(departureTime, flight.departureTime) && Objects.equals(arrivalTime, flight.arrivalTime) && Objects.equals(from, flight.from) && Objects.equals(to, flight.to);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, from, to, carrier, departureTime, arrivalTime);
+        return Objects.hash(id, carrier, departureTime, arrivalTime, from, to);
     }
 }

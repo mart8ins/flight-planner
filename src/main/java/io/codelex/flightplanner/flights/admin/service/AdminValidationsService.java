@@ -1,6 +1,6 @@
 package io.codelex.flightplanner.flights.admin.service;
 
-import io.codelex.flightplanner.flights.admin.domain.inMemory.FlightInMemory;
+import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ public class AdminValidationsService {
 
     private Logger logger = LoggerFactory.getLogger(AdminValidationsService.class);
 
-    public void validateRequest(List<FlightInMemory> flightInMemories, FlightRequest flightRequest, LocalDateTime departureTime, LocalDateTime arrivalTime){
+    public void validateRequest(List<Flight> flightInMemories, FlightRequest flightRequest, LocalDateTime departureTime, LocalDateTime arrivalTime){
         LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
         LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
 

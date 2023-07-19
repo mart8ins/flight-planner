@@ -1,7 +1,7 @@
 package io.codelex.flightplanner.flights.customer;
 
-import io.codelex.flightplanner.flights.admin.domain.inMemory.AirportInMemory;
-import io.codelex.flightplanner.flights.admin.domain.inMemory.FlightInMemory;
+import io.codelex.flightplanner.flights.admin.domain.Airport;
+import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
@@ -40,12 +40,12 @@ class CustomerFlightsControllerTest {
     void searchAirport() {
         String searchQuery = "Lat";
 
-        AirportInMemory airportInMemory1 = new AirportInMemory("Latvia", "Riga", "RIX");
-        List<AirportInMemory> expextedAirportListInMemory = List.of(airportInMemory1);
+        Airport airport1 = new Airport("Latvia", "Riga", "RIX");
+        List<Airport> expextedAirportListInMemory = List.of(airport1);
 
         Mockito.when(customerFlightsServiceInMemory.searchAirport(searchQuery)).thenReturn(expextedAirportListInMemory);
 
-        List<AirportInMemory> actualAirportListInMemory = customerFlightsController.searchAirport(searchQuery);
+        List<Airport> actualAirportListInMemory = customerFlightsController.searchAirport(searchQuery);
         Mockito.verify(customerFlightsServiceInMemory).searchAirport(airportSearchQueryCapture.capture());
         String capturedSearchQuery = airportSearchQueryCapture.getValue();
 
@@ -60,7 +60,7 @@ class CustomerFlightsControllerTest {
     void getFlightById() {
         int flightId = 1;
 
-        FlightResponse expectedFlightResponse = new FlightResponse(1,new AirportInMemory("Latvia", "Riga", "RIX"), new AirportInMemory("Estonia", "Narva", "EENA"),
+        FlightResponse expectedFlightResponse = new FlightResponse(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
                 "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00");
 
         Mockito.when(customerFlightsServiceInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
@@ -79,19 +79,19 @@ class CustomerFlightsControllerTest {
 
     @Test
     void searchFlights() {
-        SearchedFlightsResponse searchedFlightsResponse = new SearchedFlightsResponse(1,1,new ArrayList<FlightInMemory>());
+        SearchedFlightsResponse searchedFlightsResponse = new SearchedFlightsResponse(1,1,new ArrayList<Flight>());
         LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
-        FlightInMemory expectedFlightInMemory = new FlightInMemory(1,new AirportInMemory("Latvia", "Riga", "RIX"), new AirportInMemory("Estonia", "Narva", "EENA"),
+        Flight expectedFlight = new Flight(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
                 "AirBaltic", departure, arrival);
-        searchedFlightsResponse.setItems(Arrays.asList(expectedFlightInMemory));
+        searchedFlightsResponse.setItems(Arrays.asList(expectedFlight));
 
         SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", "2023-06-02");
 
         Mockito.when(customerFlightsServiceInMemory.searchFlights(searchFlightRequest)).thenReturn(searchedFlightsResponse);
 
         SearchedFlightsResponse actualResult = customerFlightsController.searchFlights(searchFlightRequest);
-        FlightInMemory actualFlightInMemory = (FlightInMemory)actualResult.getItems().get(0);
+        Flight actualFlight = (Flight)actualResult.getItems().get(0);
 
         Mockito.verify(customerFlightsServiceInMemory).searchFlights(searchFlightCapture.capture());
         SearchFlightRequest capturedSearchFlightRequest = searchFlightCapture.getValue();
@@ -101,10 +101,10 @@ class CustomerFlightsControllerTest {
         Assertions.assertEquals(1, actualResult.getPage());
         Assertions.assertEquals(1, actualResult.getTotalItems());
         Assertions.assertEquals(1, actualResult.getItems().size());
-        Assertions.assertEquals(expectedFlightInMemory, actualResult.getItems().get(0));
+        Assertions.assertEquals(expectedFlight, actualResult.getItems().get(0));
 
-        Assertions.assertEquals("Latvia", actualFlightInMemory.getFrom().getCountry());
-        Assertions.assertEquals("Estonia", actualFlightInMemory.getTo().getCountry());
-        Assertions.assertEquals("2023-06-02", actualFlightInMemory.getDepartureTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        Assertions.assertEquals("Latvia", actualFlight.getFrom().getCountry());
+        Assertions.assertEquals("Estonia", actualFlight.getTo().getCountry());
+        Assertions.assertEquals("2023-06-02", actualFlight.getDepartureTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 }

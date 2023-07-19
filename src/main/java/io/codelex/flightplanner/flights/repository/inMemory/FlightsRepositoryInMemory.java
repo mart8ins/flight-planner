@@ -1,8 +1,8 @@
 package io.codelex.flightplanner.flights.repository.inMemory;
 
 import io.codelex.flightplanner.flights.admin.service.AdminValidationsService;
-import io.codelex.flightplanner.flights.admin.domain.inMemory.FlightInMemory;
-import io.codelex.flightplanner.flights.admin.domain.inMemory.AirportInMemory;
+import io.codelex.flightplanner.flights.admin.domain.Flight;
+import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
@@ -23,8 +23,8 @@ import java.util.Map;
 
 @Repository
 public class FlightsRepositoryInMemory {
-    private List<FlightInMemory> flightInMemories = new ArrayList<>();
-    private Map<String, AirportInMemory> allAirports = new HashMap();
+    private List<Flight> flightInMemories = new ArrayList<>();
+    private Map<String, Airport> allAirports = new HashMap();
     AdminValidationsService adminValidationsService;
     Logger logger = LoggerFactory.getLogger(FlightsRepositoryInMemory.class);
 
@@ -32,11 +32,11 @@ public class FlightsRepositoryInMemory {
         this.adminValidationsService = adminValidationsService;
     }
 
-    public FlightInMemory getFlightById(String flightId) {
-        List<FlightInMemory> isFlightInMemory = flightInMemories.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
-        if(isFlightInMemory.size() > 0) {
+    public Flight getFlightById(String flightId) {
+        List<Flight> isFlight = flightInMemories.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
+        if(isFlight.size() > 0) {
             logger.info("Flight with id: " + flightId + " was found.");
-            return isFlightInMemory.get(0);
+            return isFlight.get(0);
         } else {
            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no flight with given id.");
         }
@@ -48,16 +48,15 @@ public class FlightsRepositoryInMemory {
         adminValidationsService.validateRequest(flightInMemories, flightRequest, departureDateTime, arrivalDateTime);
 
         int lastId = flightInMemories.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
-        FlightInMemory flightInMemoryToSave = new FlightInMemory(lastId + 1, flightRequest.getFrom(), flightRequest.getTo(),
-                flightRequest.getCarrier(), departureDateTime, arrivalDateTime);
-        flightInMemories.add(flightInMemoryToSave);
-        logger.info("Flight added to database: " + flightInMemoryToSave);
+        Flight flightToSave = new Flight(lastId + 1,flightRequest.getCarrier(), departureDateTime, arrivalDateTime, flightRequest.getFrom(), flightRequest.getTo());
+        flightInMemories.add(flightToSave);
+        logger.info("Flight added to database: " + flightToSave);
 
-        addAirports(flightInMemoryToSave);
+        addAirports(flightToSave);
 
-        String departureDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightInMemoryToSave.getDepartureTime());
-        String arrivalDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightInMemoryToSave.getArrivalTime());
-        return new FlightResponse(flightInMemoryToSave.getId(), flightInMemoryToSave.getFrom(), flightInMemoryToSave.getTo(), flightInMemoryToSave.getCarrier(), departureDateTimeString, arrivalDateTimeString);
+        String departureDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getDepartureTime());
+        String arrivalDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getArrivalTime());
+        return new FlightResponse(flightToSave.getId(), flightToSave.getFrom(), flightToSave.getTo(), flightToSave.getCarrier(), departureDateTimeString, arrivalDateTimeString);
     }
 
     public synchronized String deleteFlight(String flightId) {
@@ -71,9 +70,9 @@ public class FlightsRepositoryInMemory {
         }
     }
 
-    public List<AirportInMemory> searchAirport(String airportSearchQuery){
-        List<AirportInMemory> foundAirportInMemories = new ArrayList<>();
-        for(Map.Entry<String, AirportInMemory> entry: allAirports.entrySet()) {
+    public List<Airport> searchAirport(String airportSearchQuery){
+        List<Airport> foundAirportInMemories = new ArrayList<>();
+        for(Map.Entry<String, Airport> entry: allAirports.entrySet()) {
             if(entry.getKey().toLowerCase().trim().contains(airportSearchQuery.toLowerCase().trim())) {
                 foundAirportInMemories.add(entry.getValue());
             }
@@ -82,8 +81,8 @@ public class FlightsRepositoryInMemory {
         return foundAirportInMemories;
     }
 
-    public SearchedFlightsResponse<FlightInMemory> searchFlights(SearchFlightRequest flight) {
-        SearchedFlightsResponse result = new SearchedFlightsResponse(0, 0, new ArrayList<FlightInMemory>());
+    public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
+        SearchedFlightsResponse result = new SearchedFlightsResponse(0, 0, new ArrayList<Flight>());
 
         if(flight.getFrom().equals(flight.getTo())) {
             logger.error("Tried to search flight with invalid data, flight from: " + flight.getFrom() + " flight to: " + flight.getTo());
@@ -93,7 +92,7 @@ public class FlightsRepositoryInMemory {
 
         DateTimeFormatter flightDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        List<FlightInMemory> foundFlightInMemories = flightInMemories.stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
+        List<Flight> foundFlightInMemories = flightInMemories.stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
                 flight.getTo().equals(fl.getTo().getAirport()) &&
                 fl.getDepartureTime().format(flightDateFormatter).equals(flight.getDepartureDate())).toList();
 
@@ -109,18 +108,18 @@ public class FlightsRepositoryInMemory {
         allAirports.clear();
     }
 
-    private synchronized void addAirports(FlightInMemory flightInMemory){
+    private synchronized void addAirports(Flight flight){
         StringBuilder airportFrom = new StringBuilder();
-        airportFrom.append(flightInMemory.getFrom().getCountry() + " ");
-        airportFrom.append(flightInMemory.getFrom().getCity() + " ");
-        airportFrom.append(flightInMemory.getFrom().getAirport());
+        airportFrom.append(flight.getFrom().getCountry() + " ");
+        airportFrom.append(flight.getFrom().getCity() + " ");
+        airportFrom.append(flight.getFrom().getAirport());
 
         StringBuilder airportTo = new StringBuilder();
-        airportTo.append(flightInMemory.getTo().getCountry() + " ");
-        airportTo.append(flightInMemory.getTo().getCity() + " ");
-        airportTo.append(flightInMemory.getTo().getAirport());
-        allAirports.put(airportFrom.toString(), flightInMemory.getFrom());
-        allAirports.put(airportTo.toString(), flightInMemory.getTo());
+        airportTo.append(flight.getTo().getCountry() + " ");
+        airportTo.append(flight.getTo().getCity() + " ");
+        airportTo.append(flight.getTo().getAirport());
+        allAirports.put(airportFrom.toString(), flight.getFrom());
+        allAirports.put(airportTo.toString(), flight.getTo());
         logger.info("Airport data from flight added to airports database.");
     }
 }
