@@ -18,36 +18,38 @@ public class AdminFlightsServicePostgresDB implements AdminFlightService {
     private FlightsRepositoryPostgresDB flightsRepositoryPostgresDB;
     private AirportsRepositoryPostgresDB airportsRepositoryPostgresDB;
 
-    public AdminFlightsServicePostgresDB(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB) {
+    private AdminValidationsService adminValidationsService;
+
+    public AdminFlightsServicePostgresDB(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB, AdminValidationsService adminValidationsService) {
         this.flightsRepositoryPostgresDB = flightsRepositoryPostgresDB;
         this.airportsRepositoryPostgresDB = airportsRepositoryPostgresDB;
+        this.adminValidationsService = adminValidationsService;
     }
     public FlightResponse getFlightById(String flightId) {
         return null;
     }
 
     public FlightResponse saveFlight(FlightRequest flightRequest) {
+        List<Flight> flightsFromDatabase = flightsRepositoryPostgresDB.findAll();
+        adminValidationsService.validateRequest(flightsFromDatabase,flightRequest);
+
         Airport airport1 = new Airport(flightRequest.getFrom().getAirport(), flightRequest.getFrom().getCountry(), flightRequest.getFrom().getCity());
         Airport airport2 = new Airport(flightRequest.getTo().getAirport(), flightRequest.getTo().getCountry(), flightRequest.getTo().getCity());
         boolean airport1Exists = airportsRepositoryPostgresDB.exists(Example.of(airport1));
         boolean airport2Exists = airportsRepositoryPostgresDB.exists(Example.of(airport2));
         if(!airport1Exists) {
             airportsRepositoryPostgresDB.save(airport1);
+            logger.info("Airport: " + airport1 +  " added to database.");
         }
         if(!airport2Exists) {
             airportsRepositoryPostgresDB.save(airport2);
+            logger.info("Airport: " + airport2 +  " added to database.");
         }
+        Flight flight = new Flight(flightRequest.getCarrier(), HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime()), HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime()), flightRequest.getFrom(), flightRequest.getTo());
 
-        List<Flight> flightInMemories = flightsRepositoryPostgresDB.findAll();
-        int lastId = flightInMemories.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
-
-        Flight flight = new Flight(lastId, flightRequest.getCarrier(), HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime()), HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime()), flightRequest.getFrom(), flightRequest.getTo());
-        logger.error("Converted!!!!!!!! " + flight);
-
-        Flight saved = flightsRepositoryPostgresDB.save(flight);
-        logger.error("Saved!!!!!!!! " + saved);
-
-        return null;
+        Flight savedFlight = flightsRepositoryPostgresDB.save(flight);
+        logger.info("Flight: " + savedFlight +  " saved in database.");
+        return new FlightResponse(savedFlight.getId(), savedFlight.getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(savedFlight.getDepartureTime()), HandleDatesFormatter.formatLocalDateTimeToString(savedFlight.getArrivalTime()), savedFlight.getFrom(), savedFlight.getTo());
     }
 
     public String deleteFlight(String flightId) {

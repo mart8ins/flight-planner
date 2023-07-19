@@ -45,7 +45,8 @@ public class FlightsRepositoryInMemory {
     public synchronized FlightResponse saveFlight(FlightRequest flightRequest) {
         LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
         LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
-        adminValidationsService.validateRequest(flightInMemories, flightRequest, departureDateTime, arrivalDateTime);
+
+        adminValidationsService.validateRequest(flightInMemories, flightRequest);
 
         int lastId = flightInMemories.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
         Flight flightToSave = new Flight(lastId + 1,flightRequest.getCarrier(), departureDateTime, arrivalDateTime, flightRequest.getFrom(), flightRequest.getTo());

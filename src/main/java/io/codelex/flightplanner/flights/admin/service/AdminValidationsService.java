@@ -17,13 +17,13 @@ public class AdminValidationsService {
 
     private Logger logger = LoggerFactory.getLogger(AdminValidationsService.class);
 
-    public void validateRequest(List<Flight> flightInMemories, FlightRequest flightRequest, LocalDateTime departureTime, LocalDateTime arrivalTime){
+    public void validateRequest(List<Flight> flightsFromStore, FlightRequest flightRequest){
         LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
         LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
 
         boolean flightAlreadyExists = false;
-        if(flightInMemories.size() > 0) {
-            flightAlreadyExists = flightInMemories.stream().anyMatch(fl -> (fl.getFrom().equals(flightRequest.getFrom()) &&
+        if(flightsFromStore.size() > 0) {
+            flightAlreadyExists = flightsFromStore.stream().anyMatch(fl -> (fl.getFrom().equals(flightRequest.getFrom()) &&
                     fl.getTo().equals(flightRequest.getTo()) &&
                     fl.getCarrier().equals(flightRequest.getCarrier()) &&
                     fl.getDepartureTime().isEqual(departureDateTime) &&
@@ -40,7 +40,7 @@ public class AdminValidationsService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This flight already exists in database");
         }
 
-        if (arrivalTime.isBefore(departureTime) || arrivalTime.isEqual(departureTime)) {
+        if (arrivalDateTime.isBefore(departureDateTime) || arrivalDateTime.isEqual(departureDateTime)) {
             logger.error("Incorrect arrival and departure dates. Arrival time is the same or before departure.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Incorrect arrival and departure dates.");
         }
