@@ -36,8 +36,8 @@ class AdminFlightsServiceInMemoryTest {
         // EXPECTED FLIGHT FROM DB WHAT IS RETURNED FROM REPOSITORY
         LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
-        Flight expectedFlightFromDBInMemory = new Flight(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", departure, arrival);
+        Flight expectedFlightFromDBInMemory = new Flight(1,
+                "AirBaltic", departure, arrival, new Airport("RIX", "Latvia", "Riga"), new Airport("EENA", "Estonia", "Narva"));
         Mockito.when(flightsRepositoryInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDBInMemory);
 
         FlightResponse flightResponse = adminFlightsServiceInMemory.getFlightById(String.valueOf(flightId));
@@ -51,10 +51,10 @@ class AdminFlightsServiceInMemoryTest {
 
     @Test
     void saveFlight() {
-        FlightRequest expectedFlightRequest = new FlightRequest(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00");
-        FlightResponse expectedFlightResponse = new FlightResponse(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00");
+        FlightRequest expectedFlightRequest = new FlightRequest(
+                "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00", new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
+        FlightResponse expectedFlightResponse = new FlightResponse(1,
+                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00", new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
 
         Mockito.when(flightsRepositoryInMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
         FlightResponse flightResponseActual = adminFlightsServiceInMemory.saveFlight(expectedFlightRequest);
