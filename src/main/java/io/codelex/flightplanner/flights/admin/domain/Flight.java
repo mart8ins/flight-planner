@@ -5,12 +5,12 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity(name="flight")
-@Table(name="flights")
+@Entity
+@Table(name = "flights")
 public class Flight {
 
     @Id
-//    @GeneratedValue(strategy= GenerationType.SEQUENCE)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="flight_id")
     private int id;
 

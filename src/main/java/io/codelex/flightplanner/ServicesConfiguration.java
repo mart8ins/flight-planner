@@ -3,6 +3,7 @@ package io.codelex.flightplanner;
 import io.codelex.flightplanner.flights.admin.service.AdminFlightService;
 import io.codelex.flightplanner.flights.admin.service.AdminFlightsServiceInMemory;
 import io.codelex.flightplanner.flights.admin.service.AdminFlightsServicePostgresDB;
+import io.codelex.flightplanner.flights.admin.service.AdminValidationsService;
 import io.codelex.flightplanner.flights.customer.service.CustomerFlightsService;
 import io.codelex.flightplanner.flights.customer.service.CustomerFlightsServiceInMemory;
 import io.codelex.flightplanner.flights.customer.service.CustomerFlightsServicePostgresDB;
@@ -28,8 +29,8 @@ public class ServicesConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "postgres-database")
-    public AdminFlightService getAdminServicePostgres(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB){
-        return new AdminFlightsServicePostgresDB(flightsRepositoryPostgresDB, airportsRepositoryPostgresDB);
+    public AdminFlightService getAdminServicePostgres(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB, AdminValidationsService adminValidationsService){
+        return new AdminFlightsServicePostgresDB(flightsRepositoryPostgresDB, airportsRepositoryPostgresDB, adminValidationsService);
     }
 
     // CUSTOMER
@@ -54,8 +55,8 @@ public class ServicesConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "postgres-database")
-    public TestingService getTestingServicePostgresDatabase(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB){
-        return new TestingServicePostgresDB(flightsRepositoryPostgresDB);
+    public TestingService getTestingServicePostgresDatabase(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB){
+        return new TestingServicePostgresDB(flightsRepositoryPostgresDB, airportsRepositoryPostgresDB);
     }
 
 }

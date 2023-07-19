@@ -9,8 +9,8 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
-@Entity(name="airport")
-@Table(name="airports")
+@Entity
+@Table(name = "airports")
 public class Airport {
 
     @Id
