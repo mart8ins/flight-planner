@@ -1,9 +1,9 @@
 package io.codelex.flightplanner.flights.admin;
 
 import io.codelex.flightplanner.flights.admin.service.AdminFlightsServiceInMemory;
-import io.codelex.flightplanner.flights.repository.FlightsRepositoryInMemory;
-import io.codelex.flightplanner.flights.admin.domain.Airport;
-import io.codelex.flightplanner.flights.admin.domain.Flight;
+import io.codelex.flightplanner.flights.repository.inMemory.FlightsRepositoryInMemory;
+import io.codelex.flightplanner.flights.admin.domain.inMemory.AirportInMemory;
+import io.codelex.flightplanner.flights.admin.domain.inMemory.FlightInMemory;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import org.junit.jupiter.api.Assertions;
@@ -36,9 +36,9 @@ class AdminFlightsServiceInMemoryTest {
         // EXPECTED FLIGHT FROM DB WHAT IS RETURNED FROM REPOSITORY
         LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
-        Flight expectedFlightFromDB = new Flight(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+        FlightInMemory expectedFlightFromDBInMemory = new FlightInMemory(1,new AirportInMemory("Latvia", "Riga", "RIX"), new AirportInMemory("Estonia", "Narva", "EENA"),
                 "AirBaltic", departure, arrival);
-        Mockito.when(flightsRepositoryInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDB);
+        Mockito.when(flightsRepositoryInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDBInMemory);
 
         FlightResponse flightResponse = adminFlightsServiceInMemory.getFlightById(String.valueOf(flightId));
         Mockito.verify(flightsRepositoryInMemory).getFlightById(String.valueOf(flightId));
@@ -51,9 +51,9 @@ class AdminFlightsServiceInMemoryTest {
 
     @Test
     void saveFlight() {
-        FlightRequest expectedFlightRequest = new FlightRequest(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+        FlightRequest expectedFlightRequest = new FlightRequest(new AirportInMemory("Latvia", "Riga", "RIX"), new AirportInMemory("Estonia", "Narva", "EENA"),
                 "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00");
-        FlightResponse expectedFlightResponse = new FlightResponse(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+        FlightResponse expectedFlightResponse = new FlightResponse(1,new AirportInMemory("Latvia", "Riga", "RIX"), new AirportInMemory("Estonia", "Narva", "EENA"),
                 "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00");
 
         Mockito.when(flightsRepositoryInMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);

@@ -1,15 +1,15 @@
-package io.codelex.flightplanner.flights.admin.domain;
+package io.codelex.flightplanner.flights.admin.domain.inMemory;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Flight {
+public class FlightInMemory {
 
     private int id;
 
-    private Airport from;
+    private AirportInMemory from;
 
-    private Airport to;
+    private AirportInMemory to;
 
     private String carrier;
 
@@ -17,7 +17,7 @@ public class Flight {
 
     private LocalDateTime arrivalTime;
 
-    public Flight(int id, Airport from, Airport to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime) {
+    public FlightInMemory(int id, AirportInMemory from, AirportInMemory to, String carrier, LocalDateTime departureTime, LocalDateTime arrivalTime) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -34,19 +34,19 @@ public class Flight {
         this.id = id;
     }
 
-    public Airport getFrom() {
+    public AirportInMemory getFrom() {
         return from;
     }
 
-    public void setFrom(Airport from) {
+    public void setFrom(AirportInMemory from) {
         this.from = from;
     }
 
-    public Airport getTo() {
+    public AirportInMemory getTo() {
         return to;
     }
 
-    public void setTo(Airport to) {
+    public void setTo(AirportInMemory to) {
         this.to = to;
     }
 
@@ -90,8 +90,8 @@ public class Flight {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Flight flight = (Flight) o;
-        return id == flight.id && Objects.equals(from, flight.from) && Objects.equals(to, flight.to) && Objects.equals(carrier, flight.carrier) && Objects.equals(departureTime, flight.departureTime) && Objects.equals(arrivalTime, flight.arrivalTime);
+        FlightInMemory flightInMemory = (FlightInMemory) o;
+        return id == flightInMemory.id && Objects.equals(from, flightInMemory.from) && Objects.equals(to, flightInMemory.to) && Objects.equals(carrier, flightInMemory.carrier) && Objects.equals(departureTime, flightInMemory.departureTime) && Objects.equals(arrivalTime, flightInMemory.arrivalTime);
     }
 
     @Override

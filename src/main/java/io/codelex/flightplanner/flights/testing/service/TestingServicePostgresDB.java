@@ -1,6 +1,6 @@
 package io.codelex.flightplanner.flights.testing.service;
 
-import io.codelex.flightplanner.flights.repository.FlightsRepositoryPostgresDB;
+import io.codelex.flightplanner.flights.repository.databasePostgres.FlightsRepositoryPostgresDB;
 
 public class TestingServicePostgresDB implements TestingService {
     private FlightsRepositoryPostgresDB flightsRepositoryPostgresDB;

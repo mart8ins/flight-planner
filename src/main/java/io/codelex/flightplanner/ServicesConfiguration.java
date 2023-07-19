@@ -6,8 +6,9 @@ import io.codelex.flightplanner.flights.admin.service.AdminFlightsServicePostgre
 import io.codelex.flightplanner.flights.customer.service.CustomerFlightsService;
 import io.codelex.flightplanner.flights.customer.service.CustomerFlightsServiceInMemory;
 import io.codelex.flightplanner.flights.customer.service.CustomerFlightsServicePostgresDB;
-import io.codelex.flightplanner.flights.repository.FlightsRepositoryInMemory;
-import io.codelex.flightplanner.flights.repository.FlightsRepositoryPostgresDB;
+import io.codelex.flightplanner.flights.repository.databasePostgres.AirportsRepositoryPostgresDB;
+import io.codelex.flightplanner.flights.repository.inMemory.FlightsRepositoryInMemory;
+import io.codelex.flightplanner.flights.repository.databasePostgres.FlightsRepositoryPostgresDB;
 import io.codelex.flightplanner.flights.testing.service.TestingServiceInMemory;
 import io.codelex.flightplanner.flights.testing.service.TestingServicePostgresDB;
 import io.codelex.flightplanner.flights.testing.service.TestingService;
@@ -27,8 +28,8 @@ public class ServicesConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "postgres-database")
-    public AdminFlightService getAdminServicePostgres(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB){
-        return new AdminFlightsServicePostgresDB(flightsRepositoryPostgresDB);
+    public AdminFlightService getAdminServicePostgres(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB){
+        return new AdminFlightsServicePostgresDB(flightsRepositoryPostgresDB, airportsRepositoryPostgresDB);
     }
 
     // CUSTOMER

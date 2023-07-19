@@ -1,6 +1,6 @@
 package io.codelex.flightplanner.flights.admin.response;
 
-import io.codelex.flightplanner.flights.admin.domain.Airport;
+import io.codelex.flightplanner.flights.admin.domain.inMemory.AirportInMemory;
 
 import java.util.Objects;
 
@@ -8,9 +8,9 @@ public class FlightResponse {
 
     private int id;
 
-    private Airport from;
+    private AirportInMemory from;
 
-    private Airport to;
+    private AirportInMemory to;
 
     private String carrier;
 
@@ -18,7 +18,7 @@ public class FlightResponse {
 
     private String arrivalTime;
 
-    public FlightResponse(int id, Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
+    public FlightResponse(int id, AirportInMemory from, AirportInMemory to, String carrier, String departureTime, String arrivalTime) {
         this.id = id;
         this.from = from;
         this.to = to;
@@ -35,19 +35,19 @@ public class FlightResponse {
         this.id = id;
     }
 
-    public Airport getFrom() {
+    public AirportInMemory getFrom() {
         return from;
     }
 
-    public void setFrom(Airport from) {
+    public void setFrom(AirportInMemory from) {
         this.from = from;
     }
 
-    public Airport getTo() {
+    public AirportInMemory getTo() {
         return to;
     }
 
-    public void setTo(Airport to) {
+    public void setTo(AirportInMemory to) {
         this.to = to;
     }
 
