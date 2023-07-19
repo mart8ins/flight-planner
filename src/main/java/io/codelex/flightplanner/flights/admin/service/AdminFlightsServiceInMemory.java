@@ -20,8 +20,8 @@ public class AdminFlightsServiceInMemory implements AdminFlightService {
         String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
         String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
 
-        return new FlightResponse(flightFromDatabase.getFrom(), flightFromDatabase.getTo(), flightFromDatabase.getCarrier(),
-                departureDateTime, arrivalDateTime, flightFromDatabase.getId());
+        return new FlightResponse(flightFromDatabase.getId(), flightFromDatabase.getFrom(), flightFromDatabase.getTo(), flightFromDatabase.getCarrier(),
+                departureDateTime, arrivalDateTime);
     }
 
     public FlightResponse saveFlight(FlightRequest flightRequest) {

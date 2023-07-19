@@ -36,8 +36,8 @@ class AdminFlightsServiceInMemoryTest {
         // EXPECTED FLIGHT FROM DB WHAT IS RETURNED FROM REPOSITORY
         LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
-        Flight expectedFlightFromDB = new Flight(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", departure, arrival, 1);
+        Flight expectedFlightFromDB = new Flight(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+                "AirBaltic", departure, arrival);
         Mockito.when(flightsRepositoryInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDB);
 
         FlightResponse flightResponse = adminFlightsServiceInMemory.getFlightById(String.valueOf(flightId));
@@ -53,8 +53,8 @@ class AdminFlightsServiceInMemoryTest {
     void saveFlight() {
         FlightRequest expectedFlightRequest = new FlightRequest(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
                 "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00");
-        FlightResponse expectedFlightResponse = new FlightResponse(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00", 1);
+        FlightResponse expectedFlightResponse = new FlightResponse(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00");
 
         Mockito.when(flightsRepositoryInMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
         FlightResponse flightResponseActual = adminFlightsServiceInMemory.saveFlight(expectedFlightRequest);

@@ -48,8 +48,8 @@ public class FlightsRepositoryInMemory {
         adminValidationsService.validateRequest(flights, flightRequest, departureDateTime, arrivalDateTime);
 
         int lastId = flights.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
-        Flight flightToSave = new Flight(flightRequest.getFrom(), flightRequest.getTo(),
-                flightRequest.getCarrier(), departureDateTime, arrivalDateTime, lastId + 1);
+        Flight flightToSave = new Flight(lastId + 1, flightRequest.getFrom(), flightRequest.getTo(),
+                flightRequest.getCarrier(), departureDateTime, arrivalDateTime);
         flights.add(flightToSave);
         logger.info("Flight added to database: " + flightToSave);
 
@@ -57,7 +57,7 @@ public class FlightsRepositoryInMemory {
 
         String departureDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getDepartureTime());
         String arrivalDateTimeString = HandleDatesFormatter.formatLocalDateTimeToString(flightToSave.getArrivalTime());
-        return new FlightResponse(flightToSave.getFrom(), flightToSave.getTo(), flightToSave.getCarrier(), departureDateTimeString, arrivalDateTimeString, flightToSave.getId());
+        return new FlightResponse(flightToSave.getId(), flightToSave.getFrom(), flightToSave.getTo(), flightToSave.getCarrier(), departureDateTimeString, arrivalDateTimeString);
     }
 
     public synchronized String deleteFlight(String flightId) {

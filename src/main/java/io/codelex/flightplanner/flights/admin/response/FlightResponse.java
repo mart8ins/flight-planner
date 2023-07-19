@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class FlightResponse {
 
+    private int id;
+
     private Airport from;
 
     private Airport to;
@@ -16,14 +18,20 @@ public class FlightResponse {
 
     private String arrivalTime;
 
-    private int id;
-
-    public FlightResponse(Airport from, Airport to, String carrier, String departureTime, String arrivalTime, int id) {
+    public FlightResponse(int id, Airport from, Airport to, String carrier, String departureTime, String arrivalTime) {
+        this.id = id;
         this.from = from;
         this.to = to;
         this.carrier = carrier;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -67,23 +75,15 @@ public class FlightResponse {
         this.arrivalTime = arrivalTime;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "FlightResponse{" +
-                "from=" + from +
+                "id=" + id +
+                ", from=" + from +
                 ", to=" + to +
                 ", carrier='" + carrier + '\'' +
                 ", departureTime='" + departureTime + '\'' +
                 ", arrivalTime='" + arrivalTime + '\'' +
-                ", id=" + id +
                 '}';
     }
 
@@ -97,8 +97,6 @@ public class FlightResponse {
 
     @Override
     public int hashCode() {
-        return Objects.hash(from, to, carrier, departureTime, arrivalTime, id);
+        return Objects.hash(id, from, to, carrier, departureTime, arrivalTime);
     }
-
-
 }
