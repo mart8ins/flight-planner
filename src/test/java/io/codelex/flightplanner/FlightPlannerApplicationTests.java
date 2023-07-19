@@ -45,7 +45,7 @@ class FlightPlannerApplicationTests {
         Airport airport2 = new Airport("Latunia", "Oaua", "BIX");
 
         FlightRequest savedFlightRequest = new FlightRequest(airport1,airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
-        FlightResponse expectedFlightResponse = new FlightResponse(airport1,airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", 1);
+        FlightResponse expectedFlightResponse = new FlightResponse(1, airport1,airport2, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00");
         FlightResponse savedFlightResponse = adminFlightsController.saveFlight(savedFlightRequest);
 
         Assertions.assertEquals(expectedFlightResponse, savedFlightResponse);

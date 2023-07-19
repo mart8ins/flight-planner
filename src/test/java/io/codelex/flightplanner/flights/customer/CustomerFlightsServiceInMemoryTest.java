@@ -37,8 +37,8 @@ class CustomerFlightsServiceInMemoryTest {
         SearchedFlightsResponse searchedFlightsResponse = new SearchedFlightsResponse(1,1,new ArrayList<Flight>());
         LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
-        Flight expectedFlight = new Flight(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", departure, arrival, 1);
+        Flight expectedFlight = new Flight(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+                "AirBaltic", departure, arrival);
         searchedFlightsResponse.setItems(Arrays.asList(expectedFlight));
 
         // SEARCH FLIGHT REQUEST
@@ -129,8 +129,8 @@ class CustomerFlightsServiceInMemoryTest {
         // EXPECTED FLIGHT FROM DB WHAT IS RETURNED FROM REPOSITORY
         LocalDateTime departure = LocalDateTime.of(2023, 06, 02, 12, 00);
         LocalDateTime arrival = LocalDateTime.of(2023, 06, 04, 12, 00);
-        Flight expectedFlightFromDB = new Flight(new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
-                "AirBaltic", departure, arrival, 1);
+        Flight expectedFlightFromDB = new Flight(1,new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"),
+                "AirBaltic", departure, arrival);
         Mockito.when(flightsRepositoryInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightFromDB);
 
         FlightResponse flightResponse = customerFlightsServiceInMemory.getFlightById(String.valueOf(flightId));
