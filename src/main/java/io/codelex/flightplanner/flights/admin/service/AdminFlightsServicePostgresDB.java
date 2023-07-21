@@ -65,6 +65,8 @@ public class AdminFlightsServicePostgresDB implements AdminFlightService {
     }
 
     public String deleteFlight(String flightId) {
-        return null;
+        flightsRepositoryPostgresDB.deleteById(Integer.parseInt(flightId));
+        logger.info("Flight with id: " + flightId + " removed from database.");
+        return "Flight with id: " + flightId + " removed from database.";
     }
 }
