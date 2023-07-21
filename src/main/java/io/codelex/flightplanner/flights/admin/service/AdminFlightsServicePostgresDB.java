@@ -36,6 +36,7 @@ public class AdminFlightsServicePostgresDB implements AdminFlightService {
             return new FlightResponse(foundFlight.get().getId(), foundFlight.get().getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getDepartureTime()),
                     HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getArrivalTime()), foundFlight.get().getFrom(), foundFlight.get().getTo());
         }
+        logger.info("Failed to find flight with id: " + flightId);
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no flight with given id.");
     }
 
@@ -45,6 +46,7 @@ public class AdminFlightsServicePostgresDB implements AdminFlightService {
 
         Airport airport1 = new Airport(flightRequest.getFrom().getAirport(), flightRequest.getFrom().getCountry(), flightRequest.getFrom().getCity());
         Airport airport2 = new Airport(flightRequest.getTo().getAirport(), flightRequest.getTo().getCountry(), flightRequest.getTo().getCity());
+
         boolean airport1Exists = airportsRepositoryPostgresDB.exists(Example.of(airport1));
         boolean airport2Exists = airportsRepositoryPostgresDB.exists(Example.of(airport2));
         if(!airport1Exists) {
