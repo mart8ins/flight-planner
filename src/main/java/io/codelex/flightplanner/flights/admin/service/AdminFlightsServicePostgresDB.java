@@ -10,8 +10,11 @@ import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AdminFlightsServicePostgresDB implements AdminFlightService {
     Logger logger = LoggerFactory.getLogger(AdminFlightsServicePostgresDB.class);
@@ -26,7 +29,14 @@ public class AdminFlightsServicePostgresDB implements AdminFlightService {
         this.adminValidationsService = adminValidationsService;
     }
     public FlightResponse getFlightById(String flightId) {
-        return null;
+        Optional<Flight> foundFlight = flightsRepositoryPostgresDB.findById(Integer.parseInt(flightId));
+
+        if(foundFlight.isPresent()){
+            logger.info("Flight with id: " + flightId + " was found.");
+            return new FlightResponse(foundFlight.get().getId(), foundFlight.get().getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getDepartureTime()),
+                    HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getArrivalTime()), foundFlight.get().getFrom(), foundFlight.get().getTo());
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no flight with given id.");
     }
 
     public FlightResponse saveFlight(FlightRequest flightRequest) {

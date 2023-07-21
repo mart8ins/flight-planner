@@ -135,9 +135,9 @@ class FlightPlannerApplicationTests {
 
         testingController.clearDatabase();
 
-        List<Airport> returnedAirportInMemories = customerFlightsController.searchAirport("LAT");
+        List<Airport> returnedAirportInMemory = customerFlightsController.searchAirport("LAT");
 
-        Assertions.assertEquals(0, returnedAirportInMemories.size());
+        Assertions.assertEquals(0, returnedAirportInMemory.size());
         Assertions.assertThrows(ResponseStatusException.class, ()-> adminFlightsController.getFlightById(String.valueOf(savedFlightResponse.getId())));
     }
 
