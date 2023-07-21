@@ -23,7 +23,7 @@ import java.util.Map;
 
 @Repository
 public class FlightsRepositoryInMemory {
-    private List<Flight> flightInMemories = new ArrayList<>();
+    private List<Flight> flightInMemory = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
     AdminValidationsService adminValidationsService;
     Logger logger = LoggerFactory.getLogger(FlightsRepositoryInMemory.class);
@@ -33,7 +33,7 @@ public class FlightsRepositoryInMemory {
     }
 
     public Flight getFlightById(String flightId) {
-        List<Flight> isFlight = flightInMemories.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
+        List<Flight> isFlight = flightInMemory.stream().filter(fl -> flightId.equals(String.valueOf(fl.getId()))).toList();
         if(isFlight.size() > 0) {
             logger.info("Flight with id: " + flightId + " was found.");
             return isFlight.get(0);
@@ -46,11 +46,11 @@ public class FlightsRepositoryInMemory {
         LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
         LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
 
-        adminValidationsService.validateRequest(flightInMemories, flightRequest);
+        adminValidationsService.validateRequest(flightInMemory, flightRequest);
 
-        int lastId = flightInMemories.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
+        int lastId = flightInMemory.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
         Flight flightToSave = new Flight(lastId + 1,flightRequest.getCarrier(), departureDateTime, arrivalDateTime, flightRequest.getFrom(), flightRequest.getTo());
-        flightInMemories.add(flightToSave);
+        flightInMemory.add(flightToSave);
         logger.info("Flight added to database: " + flightToSave);
 
         addAirports(flightToSave);
@@ -61,7 +61,7 @@ public class FlightsRepositoryInMemory {
     }
 
     public synchronized String deleteFlight(String flightId) {
-        boolean removed = flightInMemories.removeIf(fl -> flightId.equals(String.valueOf(fl.getId())));
+        boolean removed = flightInMemory.removeIf(fl -> flightId.equals(String.valueOf(fl.getId())));
         if(removed) {
             logger.info("Flight with id: " + flightId + " removed from database.");
             return "Flight with id: " + flightId + " removed from database.";
@@ -72,14 +72,14 @@ public class FlightsRepositoryInMemory {
     }
 
     public List<Airport> searchAirport(String airportSearchQuery){
-        List<Airport> foundAirportInMemories = new ArrayList<>();
+        List<Airport> foundAirportInMemory = new ArrayList<>();
         for(Map.Entry<String, Airport> entry: allAirports.entrySet()) {
             if(entry.getKey().toLowerCase().trim().contains(airportSearchQuery.toLowerCase().trim())) {
-                foundAirportInMemories.add(entry.getValue());
+                foundAirportInMemory.add(entry.getValue());
             }
         }
-        logger.info("Using search query: " + airportSearchQuery + " found airports: " + foundAirportInMemories);
-        return foundAirportInMemories;
+        logger.info("Using search query: " + airportSearchQuery + " found airports: " + foundAirportInMemory);
+        return foundAirportInMemory;
     }
 
     public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
@@ -93,19 +93,19 @@ public class FlightsRepositoryInMemory {
 
         DateTimeFormatter flightDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        List<Flight> foundFlightInMemories = flightInMemories.stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
+        List<Flight> foundFlightInMemory = flightInMemory.stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
                 flight.getTo().equals(fl.getTo().getAirport()) &&
                 fl.getDepartureTime().format(flightDateFormatter).equals(flight.getDepartureDate())).toList();
 
-        result.setTotalItems(foundFlightInMemories.size());
-        result.setItems(foundFlightInMemories);
-        result.setPage(foundFlightInMemories.size() / 10);
+        result.setTotalItems(foundFlightInMemory.size());
+        result.setItems(foundFlightInMemory);
+        result.setPage(foundFlightInMemory.size() / 10);
         return result;
     }
 
     public synchronized void clearDatabase(){
         logger.info("Database cleared.");
-        flightInMemories.clear();
+        flightInMemory.clear();
         allAirports.clear();
     }
 
