@@ -21,43 +21,34 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ServicesConfiguration {
 
-    // ADMIN
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "in-memory")
     public AdminFlightService getAdminServiceInMemory(FlightsRepositoryInMemory flightsRepositoryInMemory){
         return new AdminFlightsServiceInMemory(flightsRepositoryInMemory);
     }
-
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "postgres-database")
     public AdminFlightService getAdminServicePostgres(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB, AdminValidationsService adminValidationsService){
         return new AdminFlightsServicePostgresDB(flightsRepositoryPostgresDB, airportsRepositoryPostgresDB, adminValidationsService);
     }
-
-    // CUSTOMER
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "in-memory")
     public CustomerFlightsService getCustomerServiceInMemory(FlightsRepositoryInMemory flightsRepositoryInMemory){
         return new CustomerFlightsServiceInMemory(flightsRepositoryInMemory);
     }
-
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "postgres-database")
-    public CustomerFlightsService getCustomerServicePostgresDB(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB){
-        return new CustomerFlightsServicePostgresDB(flightsRepositoryPostgresDB);
+    public CustomerFlightsService getCustomerServicePostgresDB(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB){
+        return new CustomerFlightsServicePostgresDB(flightsRepositoryPostgresDB, airportsRepositoryPostgresDB);
     }
-
-    // TESTING SERVICE
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "in-memory")
     public TestingService getTestingServiceInMemory(FlightsRepositoryInMemory flightsRepositoryInMemory){
         return new TestingServiceInMemory(flightsRepositoryInMemory);
     }
-
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name="datasource", havingValue = "postgres-database")
     public TestingService getTestingServicePostgresDatabase(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB){
         return new TestingServicePostgresDB(flightsRepositoryPostgresDB, airportsRepositoryPostgresDB);
     }
-
 }

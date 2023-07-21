@@ -40,7 +40,7 @@ public class AdminFlightsServicePostgresDB implements AdminFlightService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no flight with given id.");
     }
 
-    public FlightResponse saveFlight(FlightRequest flightRequest) {
+    public synchronized FlightResponse saveFlight(FlightRequest flightRequest) {
         List<Flight> flightsFromDatabase = flightsRepositoryPostgresDB.findAll();
         adminValidationsService.validateRequest(flightsFromDatabase,flightRequest);
 
