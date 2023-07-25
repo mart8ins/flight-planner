@@ -1,4 +1,4 @@
-package io.codelex.flightplanner;
+package io.codelex.flightplanner.configuration;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-public class DatasourceConfiguration {
+public class DatasourceConfig {
     @Bean
     @ConditionalOnProperty(prefix = "flightsPlanner", name = "datasource", havingValue = "postgres-database")
     public DataSource getDatabaseDatasource() {

@@ -4,8 +4,9 @@ import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
-import io.codelex.flightplanner.flights.repository.databasePostgres.AirportsRepositoryPostgresDB;
-import io.codelex.flightplanner.flights.repository.databasePostgres.FlightsRepositoryPostgresDB;
+import io.codelex.flightplanner.flights.repository.database.AirportsRepositoryDatabase;
+import io.codelex.flightplanner.flights.repository.database.FlightsRepositoryDatabase;
+import io.codelex.flightplanner.flights.admin.validation.FlightReqValidationService;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,20 +17,20 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
 
-public class AdminFlightsServicePostgresDB implements AdminFlightService {
-    Logger logger = LoggerFactory.getLogger(AdminFlightsServicePostgresDB.class);
-    private FlightsRepositoryPostgresDB flightsRepositoryPostgresDB;
-    private AirportsRepositoryPostgresDB airportsRepositoryPostgresDB;
+public class AdminServiceDatabase implements AdminService {
+    Logger logger = LoggerFactory.getLogger(AdminServiceDatabase.class);
+    private FlightsRepositoryDatabase flightsRepositoryDatabase;
+    private AirportsRepositoryDatabase airportsRepositoryDatabase;
 
-    private AdminValidationsService adminValidationsService;
+    private FlightReqValidationService flightReqValidationService;
 
-    public AdminFlightsServicePostgresDB(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB, AdminValidationsService adminValidationsService) {
-        this.flightsRepositoryPostgresDB = flightsRepositoryPostgresDB;
-        this.airportsRepositoryPostgresDB = airportsRepositoryPostgresDB;
-        this.adminValidationsService = adminValidationsService;
+    public AdminServiceDatabase(FlightsRepositoryDatabase flightsRepositoryDatabase, AirportsRepositoryDatabase airportsRepositoryDatabase, FlightReqValidationService flightReqValidationService) {
+        this.flightsRepositoryDatabase = flightsRepositoryDatabase;
+        this.airportsRepositoryDatabase = airportsRepositoryDatabase;
+        this.flightReqValidationService = flightReqValidationService;
     }
     public FlightResponse getFlightById(String flightId) {
-        Optional<Flight> foundFlight = flightsRepositoryPostgresDB.findById(Integer.parseInt(flightId));
+        Optional<Flight> foundFlight = flightsRepositoryDatabase.findById(Integer.parseInt(flightId));
 
         if(foundFlight.isPresent()){
             logger.info("Flight with id: " + flightId + " was found.");
@@ -41,31 +42,31 @@ public class AdminFlightsServicePostgresDB implements AdminFlightService {
     }
 
     public synchronized FlightResponse saveFlight(FlightRequest flightRequest) {
-        List<Flight> flightsFromDatabase = flightsRepositoryPostgresDB.findAll();
-        adminValidationsService.validateRequest(flightsFromDatabase,flightRequest);
+        List<Flight> flightsFromDatabase = flightsRepositoryDatabase.findAll();
+        flightReqValidationService.validateRequest(flightsFromDatabase,flightRequest);
 
         Airport airport1 = new Airport(flightRequest.getFrom().getAirport(), flightRequest.getFrom().getCountry(), flightRequest.getFrom().getCity());
         Airport airport2 = new Airport(flightRequest.getTo().getAirport(), flightRequest.getTo().getCountry(), flightRequest.getTo().getCity());
 
-        boolean airport1Exists = airportsRepositoryPostgresDB.exists(Example.of(airport1));
-        boolean airport2Exists = airportsRepositoryPostgresDB.exists(Example.of(airport2));
+        boolean airport1Exists = airportsRepositoryDatabase.exists(Example.of(airport1));
+        boolean airport2Exists = airportsRepositoryDatabase.exists(Example.of(airport2));
         if(!airport1Exists) {
-            airportsRepositoryPostgresDB.save(airport1);
+            airportsRepositoryDatabase.save(airport1);
             logger.info("Airport: " + airport1 +  " added to database.");
         }
         if(!airport2Exists) {
-            airportsRepositoryPostgresDB.save(airport2);
+            airportsRepositoryDatabase.save(airport2);
             logger.info("Airport: " + airport2 +  " added to database.");
         }
         Flight flight = new Flight(flightRequest.getCarrier(), HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime()), HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime()), flightRequest.getFrom(), flightRequest.getTo());
 
-        Flight savedFlight = flightsRepositoryPostgresDB.save(flight);
+        Flight savedFlight = flightsRepositoryDatabase.save(flight);
         logger.info("Flight: " + savedFlight +  " saved in database.");
         return new FlightResponse(savedFlight.getId(), savedFlight.getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(savedFlight.getDepartureTime()), HandleDatesFormatter.formatLocalDateTimeToString(savedFlight.getArrivalTime()), savedFlight.getFrom(), savedFlight.getTo());
     }
 
     public String deleteFlight(String flightId) {
-        flightsRepositoryPostgresDB.deleteById(Integer.parseInt(flightId));
+        flightsRepositoryDatabase.deleteById(Integer.parseInt(flightId));
         logger.info("Flight with id: " + flightId + " removed from database.");
         return "Flight with id: " + flightId + " removed from database.";
     }

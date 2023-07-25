@@ -1,4 +1,4 @@
-package io.codelex.flightplanner.flights.admin.service;
+package io.codelex.flightplanner.flights.admin.validation;
 
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class AdminValidationsService {
+public class FlightReqValidationService {
 
-    private Logger logger = LoggerFactory.getLogger(AdminValidationsService.class);
+    private Logger logger = LoggerFactory.getLogger(FlightReqValidationService.class);
 
     public void validateRequest(List<Flight> flightsFromStore, FlightRequest flightRequest){
         LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());

@@ -1,6 +1,6 @@
-package io.codelex.flightplanner.flights.repository.inMemory;
+package io.codelex.flightplanner.flights.repository.memory;
 
-import io.codelex.flightplanner.flights.admin.service.AdminValidationsService;
+import io.codelex.flightplanner.flights.admin.validation.FlightReqValidationService;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class FlightsRepositoryInMemory {
+public class FlightsRepositoryMemory {
     private List<Flight> flightInMemory = new ArrayList<>();
     private Map<String, Airport> allAirports = new HashMap();
-    AdminValidationsService adminValidationsService;
-    Logger logger = LoggerFactory.getLogger(FlightsRepositoryInMemory.class);
+    FlightReqValidationService flightReqValidationService;
+    Logger logger = LoggerFactory.getLogger(FlightsRepositoryMemory.class);
 
-    public FlightsRepositoryInMemory(AdminValidationsService adminValidationsService) {
-        this.adminValidationsService = adminValidationsService;
+    public FlightsRepositoryMemory(FlightReqValidationService flightReqValidationService) {
+        this.flightReqValidationService = flightReqValidationService;
     }
 
     public Flight getFlightById(String flightId) {
@@ -46,7 +46,7 @@ public class FlightsRepositoryInMemory {
         LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
         LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
 
-        adminValidationsService.validateRequest(flightInMemory, flightRequest);
+        flightReqValidationService.validateRequest(flightInMemory, flightRequest);
 
         int lastId = flightInMemory.stream().mapToInt(fl -> fl.getId()).max().orElse(0);
         Flight flightToSave = new Flight(lastId + 1,flightRequest.getCarrier(), departureDateTime, arrivalDateTime, flightRequest.getFrom(), flightRequest.getTo());

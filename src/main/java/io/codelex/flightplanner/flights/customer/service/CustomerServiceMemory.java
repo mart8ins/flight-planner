@@ -1,6 +1,6 @@
 package io.codelex.flightplanner.flights.customer.service;
 
-import io.codelex.flightplanner.flights.repository.inMemory.FlightsRepositoryInMemory;
+import io.codelex.flightplanner.flights.repository.memory.FlightsRepositoryMemory;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
@@ -10,20 +10,20 @@ import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 
 import java.util.List;
 
-public class CustomerFlightsServiceInMemory implements CustomerFlightsService {
+public class CustomerServiceMemory implements CustomerService {
 
-    private FlightsRepositoryInMemory flightsRepositoryInMemory;
+    private FlightsRepositoryMemory flightsRepositoryMemory;
 
-    public CustomerFlightsServiceInMemory(FlightsRepositoryInMemory flightsRepositoryInMemory) {
-        this.flightsRepositoryInMemory = flightsRepositoryInMemory;
+    public CustomerServiceMemory(FlightsRepositoryMemory flightsRepositoryMemory) {
+        this.flightsRepositoryMemory = flightsRepositoryMemory;
     }
 
     public List<Airport> searchAirport(String airportSearchQuery){
-        return flightsRepositoryInMemory.searchAirport(airportSearchQuery);
+        return flightsRepositoryMemory.searchAirport(airportSearchQuery);
     }
 
     public FlightResponse getFlightById(String flightId) {
-        Flight flightFromDatabase = flightsRepositoryInMemory.getFlightById(flightId);
+        Flight flightFromDatabase = flightsRepositoryMemory.getFlightById(flightId);
 
         String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
         String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
@@ -32,6 +32,6 @@ public class CustomerFlightsServiceInMemory implements CustomerFlightsService {
     }
 
     public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
-        return flightsRepositoryInMemory.searchFlights(flight);
+        return flightsRepositoryMemory.searchFlights(flight);
     }
 }

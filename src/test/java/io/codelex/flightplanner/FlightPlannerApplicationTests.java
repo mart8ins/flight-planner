@@ -1,12 +1,12 @@
 package io.codelex.flightplanner;
 
-import io.codelex.flightplanner.flights.repository.inMemory.FlightsRepositoryInMemory;
-import io.codelex.flightplanner.flights.admin.AdminFlightsController;
+import io.codelex.flightplanner.flights.repository.memory.FlightsRepositoryMemory;
+import io.codelex.flightplanner.flights.admin.AdminController;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
-import io.codelex.flightplanner.flights.customer.CustomerFlightsController;
+import io.codelex.flightplanner.flights.customer.CustomerController;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
 import io.codelex.flightplanner.flights.testing.TestingController;
@@ -23,20 +23,20 @@ import java.util.List;
 class FlightPlannerApplicationTests {
 
     @Autowired
-    FlightsRepositoryInMemory flightsRepositoryInMemory;
+    FlightsRepositoryMemory flightsRepositoryMemory;
 
     @Autowired
-    AdminFlightsController adminFlightsController;
+    AdminController adminController;
 
     @Autowired
-    CustomerFlightsController customerFlightsController;
+    CustomerController customerController;
 
     @Autowired
     TestingController testingController;
 
     @BeforeEach
     void clearRepository(){
-        flightsRepositoryInMemory.clearDatabase();
+        flightsRepositoryMemory.clearDatabase();
     }
 
     @Test
@@ -46,7 +46,7 @@ class FlightPlannerApplicationTests {
 
         FlightRequest savedFlightRequest = new FlightRequest("AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         FlightResponse expectedFlightResponse = new FlightResponse(1, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        FlightResponse savedFlightResponse = adminFlightsController.saveFlight(savedFlightRequest);
+        FlightResponse savedFlightResponse = adminController.saveFlight(savedFlightRequest);
 
         Assertions.assertEquals(expectedFlightResponse, savedFlightResponse);
     }
@@ -57,8 +57,8 @@ class FlightPlannerApplicationTests {
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
         FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        FlightResponse returnedFlightResponse = adminFlightsController.saveFlight(flightToSave);
-        FlightResponse foundFlightByID = adminFlightsController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
+        FlightResponse returnedFlightResponse = adminController.saveFlight(flightToSave);
+        FlightResponse foundFlightByID = adminController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
 
         Assertions.assertEquals(returnedFlightResponse, foundFlightByID);
     }
@@ -69,8 +69,8 @@ class FlightPlannerApplicationTests {
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
         FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        FlightResponse returnedFlightResponse = adminFlightsController.saveFlight(flightToSave);
-        String deleteFlightResponse = adminFlightsController.deleteFlight(String.valueOf(returnedFlightResponse.getId()));
+        FlightResponse returnedFlightResponse = adminController.saveFlight(flightToSave);
+        String deleteFlightResponse = adminController.deleteFlight(String.valueOf(returnedFlightResponse.getId()));
 
         String expectedStringResponse = "Flight with id: " + returnedFlightResponse.getId() + " removed from database.";
 
@@ -83,12 +83,12 @@ class FlightPlannerApplicationTests {
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
         FlightRequest flightToSave1 = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        adminFlightsController.saveFlight(flightToSave1);
+        adminController.saveFlight(flightToSave1);
 
-        List<Airport> foundAirportsCountryNamePart = customerFlightsController.searchAirport("LAT");
-        List<Airport> foundAirportsAirport = customerFlightsController.searchAirport("iX");
+        List<Airport> foundAirportsCountryNamePart = customerController.searchAirport("LAT");
+        List<Airport> foundAirportsAirport = customerController.searchAirport("iX");
 
-        List<Airport> foundAirportsSpecificAirport = customerFlightsController.searchAirport("riga");
+        List<Airport> foundAirportsSpecificAirport = customerController.searchAirport("riga");
 
         Assertions.assertEquals(2, foundAirportsCountryNamePart.size());
         Assertions.assertEquals(2, foundAirportsAirport.size());
@@ -101,8 +101,8 @@ class FlightPlannerApplicationTests {
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
         FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        FlightResponse returnedFlightResponse = adminFlightsController.saveFlight(flightToSave);
-        FlightResponse foundFlightByID = customerFlightsController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
+        FlightResponse returnedFlightResponse = adminController.saveFlight(flightToSave);
+        FlightResponse foundFlightByID = customerController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
 
         Assertions.assertEquals(returnedFlightResponse, foundFlightByID);
     }
@@ -116,10 +116,10 @@ class FlightPlannerApplicationTests {
 
         FlightRequest flightToSave1 = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
         FlightRequest flightToSave2 = new FlightRequest("SwedenBaltic","2023-06-03 12:00","2023-06-05 12:00", airport3, airport2);
-        FlightResponse flightResponse = adminFlightsController.saveFlight(flightToSave1);
-        adminFlightsController.saveFlight(flightToSave2);
+        FlightResponse flightResponse = adminController.saveFlight(flightToSave1);
+        adminController.saveFlight(flightToSave2);
 
-        SearchedFlightsResponse<Flight> searchedFlightsResponse = customerFlightsController.searchFlights(searchFlightRequest);
+        SearchedFlightsResponse<Flight> searchedFlightsResponse = customerController.searchFlights(searchFlightRequest);
         Assertions.assertEquals(0,searchedFlightsResponse.getPage());
         Assertions.assertEquals(1,searchedFlightsResponse.getTotalItems());
         Assertions.assertEquals(flightResponse.getId(),searchedFlightsResponse.getItems().get(0).getId());
@@ -131,14 +131,14 @@ class FlightPlannerApplicationTests {
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
         FlightRequest savedFlightRequest = new FlightRequest("AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        FlightResponse savedFlightResponse = adminFlightsController.saveFlight(savedFlightRequest);
+        FlightResponse savedFlightResponse = adminController.saveFlight(savedFlightRequest);
 
         testingController.clearDatabase();
 
-        List<Airport> returnedAirportInMemory = customerFlightsController.searchAirport("LAT");
+        List<Airport> returnedAirportInMemory = customerController.searchAirport("LAT");
 
         Assertions.assertEquals(0, returnedAirportInMemory.size());
-        Assertions.assertThrows(ResponseStatusException.class, ()-> adminFlightsController.getFlightById(String.valueOf(savedFlightResponse.getId())));
+        Assertions.assertThrows(ResponseStatusException.class, ()-> adminController.getFlightById(String.valueOf(savedFlightResponse.getId())));
     }
 
 }

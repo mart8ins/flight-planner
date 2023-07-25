@@ -8,7 +8,7 @@ import io.codelex.flightplanner.flights.customer.response.SearchedFlightsRespons
 
 import java.util.List;
 
-public interface CustomerFlightsService {
+public interface CustomerService {
     List<Airport> searchAirport(String airportSearchQuery);
 
     FlightResponse getFlightById(String flightId);

@@ -3,7 +3,7 @@ package io.codelex.flightplanner.flights.admin;
 import io.codelex.flightplanner.flights.admin.domain.Airport;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
-import io.codelex.flightplanner.flights.admin.service.AdminFlightsServiceInMemory;
+import io.codelex.flightplanner.flights.admin.service.AdminServiceMemory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,13 +12,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 @ExtendWith(MockitoExtension.class)
-class AdminFlightsControllerTest {
+class AdminControllerTest {
 
     @Mock
-    AdminFlightsServiceInMemory adminFlightsServiceInMemory;
+    AdminServiceMemory adminServiceMemory;
 
     @InjectMocks
-    AdminFlightsController adminFlightsController;
+    AdminController adminController;
 
     @Captor
     ArgumentCaptor<String> flightIdQueryCapture;
@@ -38,11 +38,11 @@ class AdminFlightsControllerTest {
         FlightResponse expectedFlightResponse = new FlightResponse(1,
                 "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00", new Airport("RIX", "Latvia", "Riga" ), new Airport("EENA", "Estonia", "Narva"));
 
-        Mockito.when(adminFlightsServiceInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
+        Mockito.when(adminServiceMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
-        FlightResponse actualFlightResponse = adminFlightsController.getFlightById(String.valueOf(flightId));
+        FlightResponse actualFlightResponse = adminController.getFlightById(String.valueOf(flightId));
 
-        Mockito.verify(adminFlightsServiceInMemory).getFlightById(flightIdQueryCapture.capture());
+        Mockito.verify(adminServiceMemory).getFlightById(flightIdQueryCapture.capture());
         String capturedFlightIdQuery = flightIdQueryCapture.getValue();
 
         Assertions.assertEquals(String.valueOf(flightId), capturedFlightIdQuery);
@@ -59,10 +59,10 @@ class AdminFlightsControllerTest {
         FlightResponse expectedFlightResponse = new FlightResponse(1,
                 "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00", new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
 
-        Mockito.when(adminFlightsServiceInMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
-        FlightResponse flightResponseActual = adminFlightsController.saveFlight(expectedFlightRequest);
+        Mockito.when(adminServiceMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
+        FlightResponse flightResponseActual = adminController.saveFlight(expectedFlightRequest);
 
-        Mockito.verify(adminFlightsServiceInMemory).saveFlight(flightRequestCapture.capture());
+        Mockito.verify(adminServiceMemory).saveFlight(flightRequestCapture.capture());
         FlightRequest flightRequestCaptured = flightRequestCapture.getValue();
 
         Assertions.assertEquals(expectedFlightRequest, flightRequestCaptured);
@@ -75,10 +75,10 @@ class AdminFlightsControllerTest {
         String flightIdToDelete = "1";
         String expectedMessageAfterDelete = "Flight with id: " + flightIdToDelete + " removed from database.";
 
-        Mockito.when(adminFlightsServiceInMemory.deleteFlight(flightIdToDelete)).thenReturn(expectedMessageAfterDelete);
-        String receivedMessageAfterDeletion = adminFlightsController.deleteFlight(flightIdToDelete);
+        Mockito.when(adminServiceMemory.deleteFlight(flightIdToDelete)).thenReturn(expectedMessageAfterDelete);
+        String receivedMessageAfterDeletion = adminController.deleteFlight(flightIdToDelete);
 
-        Mockito.verify(adminFlightsServiceInMemory).deleteFlight(deleteFlightIdCapture.capture());
+        Mockito.verify(adminServiceMemory).deleteFlight(deleteFlightIdCapture.capture());
         String capturedIdToDeleteFlight = deleteFlightIdCapture.getValue();
 
         Assertions.assertEquals(flightIdToDelete, capturedIdToDeleteFlight);
