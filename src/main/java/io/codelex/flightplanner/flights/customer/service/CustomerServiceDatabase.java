@@ -29,17 +29,8 @@ public class CustomerServiceDatabase implements CustomerService {
     }
 
     public List<Airport> searchAirport(String airportSearchQuery) {
-        String formattedSearchQuery = airportSearchQuery.toLowerCase().trim();
-        List<Airport> allAirports = airportsRepositoryDatabase.findAll();
-        List<Airport> foundAirports = new ArrayList<>();
-
-        allAirports.forEach(a -> {
-            if(a.getAirport().toLowerCase().contains(formattedSearchQuery) ||
-                    a.getCountry().toLowerCase().contains(formattedSearchQuery)||
-                    a.getCity().toLowerCase().contains(formattedSearchQuery)){
-                foundAirports.add(a);
-            }
-        });
+        String formattedSearchQuery = airportSearchQuery.trim();
+        List<Airport> foundAirports = airportsRepositoryDatabase.findAirportsByAirportContainingIgnoreCaseOrCityContainingIgnoreCaseOrCountryContainingIgnoreCase(formattedSearchQuery, formattedSearchQuery, formattedSearchQuery);
         return foundAirports;
     }
 
