@@ -1,6 +1,6 @@
 package io.codelex.flightplanner.flights.testing;
 
-import io.codelex.flightplanner.flights.testing.service.TestingServiceInMemory;
+import io.codelex.flightplanner.flights.testing.service.TestingServiceMemory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class TestingControllerTest {
 
     @Mock
-    TestingServiceInMemory testingServiceInmemory;
+    TestingServiceMemory testingServiceInmemory;
 
     @InjectMocks
     TestingController testingController;

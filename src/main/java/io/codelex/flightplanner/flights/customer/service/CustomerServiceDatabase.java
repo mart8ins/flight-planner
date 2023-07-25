@@ -5,8 +5,8 @@ import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
-import io.codelex.flightplanner.flights.repository.databasePostgres.AirportsRepositoryPostgresDB;
-import io.codelex.flightplanner.flights.repository.databasePostgres.FlightsRepositoryPostgresDB;
+import io.codelex.flightplanner.flights.repository.database.AirportsRepositoryDatabase;
+import io.codelex.flightplanner.flights.repository.database.FlightsRepositoryDatabase;
 import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,19 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CustomerFlightsServicePostgresDB implements CustomerFlightsService{
-    Logger logger = LoggerFactory.getLogger(CustomerFlightsServicePostgresDB.class);
-    private FlightsRepositoryPostgresDB flightsRepositoryPostgresDB;
-    private AirportsRepositoryPostgresDB airportsRepositoryPostgresDB;
+public class CustomerServiceDatabase implements CustomerService {
+    Logger logger = LoggerFactory.getLogger(CustomerServiceDatabase.class);
+    private FlightsRepositoryDatabase flightsRepositoryDatabase;
+    private AirportsRepositoryDatabase airportsRepositoryDatabase;
 
-    public CustomerFlightsServicePostgresDB(FlightsRepositoryPostgresDB flightsRepositoryPostgresDB, AirportsRepositoryPostgresDB airportsRepositoryPostgresDB) {
-        this.flightsRepositoryPostgresDB = flightsRepositoryPostgresDB;
-        this.airportsRepositoryPostgresDB = airportsRepositoryPostgresDB;
+    public CustomerServiceDatabase(FlightsRepositoryDatabase flightsRepositoryDatabase, AirportsRepositoryDatabase airportsRepositoryDatabase) {
+        this.flightsRepositoryDatabase = flightsRepositoryDatabase;
+        this.airportsRepositoryDatabase = airportsRepositoryDatabase;
     }
 
     public List<Airport> searchAirport(String airportSearchQuery) {
         String formattedSearchQuery = airportSearchQuery.toLowerCase().trim();
-        List<Airport> allAirports = airportsRepositoryPostgresDB.findAll();
+        List<Airport> allAirports = airportsRepositoryDatabase.findAll();
         List<Airport> foundAirports = new ArrayList<>();
 
         allAirports.forEach(a -> {
@@ -44,7 +44,7 @@ public class CustomerFlightsServicePostgresDB implements CustomerFlightsService{
     }
 
     public FlightResponse getFlightById(String flightId) {
-        Optional<Flight> foundFlightForCustomer = flightsRepositoryPostgresDB.findById(Integer.parseInt(flightId));
+        Optional<Flight> foundFlightForCustomer = flightsRepositoryDatabase.findById(Integer.parseInt(flightId));
         if(foundFlightForCustomer.isPresent()){
             logger.info("Flight with id: " + flightId + " was found.");
             return new FlightResponse(foundFlightForCustomer.get().getId(), foundFlightForCustomer.get().getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(foundFlightForCustomer.get().getDepartureTime()),
@@ -65,7 +65,7 @@ public class CustomerFlightsServicePostgresDB implements CustomerFlightsService{
 
         DateTimeFormatter flightDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        List<Flight> foundFlights = flightsRepositoryPostgresDB.findAll().stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
+        List<Flight> foundFlights = flightsRepositoryDatabase.findAll().stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
                 flight.getTo().equals(fl.getTo().getAirport()) &&
                 fl.getDepartureTime().format(flightDateFormatter).equals(flight.getDepartureDate())).toList();
 
