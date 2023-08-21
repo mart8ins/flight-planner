@@ -20,6 +20,7 @@ public class FlightReqValidationService {
         LocalDateTime departureDateTime = flightRequest.getDepartureTime();
         LocalDateTime arrivalDateTime = flightRequest.getArrivalTime();
 
+
         boolean flightAlreadyExists = false;
         if(flightsFromStore.size() > 0) {
             flightAlreadyExists = flightsFromStore.stream().anyMatch(fl -> (fl.getFrom().equals(flightRequest.getFrom()) &&

@@ -39,7 +39,9 @@ class AdminControllerTest {
         int flightId = 1;
 
         FlightResponse expectedFlightResponse = new FlightResponse(1,
+
                 "AirBaltic", LocalDateTime.of(2023,6,2,12,0), LocalDateTime.of(2023,6,4,12,0), new Airport("RIX", "Latvia", "Riga" ), new Airport("EENA", "Estonia", "Narva"));
+
 
         Mockito.when(adminServiceMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
@@ -63,6 +65,7 @@ class AdminControllerTest {
                 "AirBaltic", LocalDateTime.of(2023,6,1,12,0), LocalDateTime.of(2023,6,2,12,0),new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
         FlightResponse expectedFlightResponse = new FlightResponse(1,
                 "AirBaltic", LocalDateTime.of(2023,6,1,12,0), LocalDateTime.of(2023,6,2,12,0), new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
+
 
         Mockito.when(adminServiceMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
         FlightResponse flightResponseActual = adminController.saveFlight(expectedFlightRequest);
