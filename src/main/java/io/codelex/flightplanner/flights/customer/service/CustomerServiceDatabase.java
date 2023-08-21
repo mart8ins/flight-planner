@@ -54,11 +54,7 @@ public class CustomerServiceDatabase implements CustomerService {
         }
         logger.info("Searched flight is " + flight);
 
-        DateTimeFormatter flightDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-        List<Flight> foundFlights = flightsRepositoryDatabase.findAll().stream().filter(fl -> flight.getFrom().equals(fl.getFrom().getAirport()) &&
-                flight.getTo().equals(fl.getTo().getAirport()) &&
-                fl.getDepartureTime().format(flightDateFormatter).equals(flight.getDepartureDate())).toList();
+        List<Flight> foundFlights = flightsRepositoryDatabase.findFlights(flight.getFrom(), flight.getTo(), HandleDatesFormatter.formatStringToDate(flight.getDepartureDate()));
 
         result.setTotalItems(foundFlights.size());
         result.setItems(foundFlights);

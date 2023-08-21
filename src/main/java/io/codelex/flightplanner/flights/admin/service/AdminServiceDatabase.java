@@ -32,7 +32,7 @@ public class AdminServiceDatabase implements AdminService {
     public FlightResponse getFlightById(String flightId) {
         Optional<Flight> foundFlight = flightsRepositoryDatabase.findById(Integer.parseInt(flightId));
 
-        if(foundFlight.isPresent()){
+        if(foundFlight.isPresent()) {
             logger.info("Flight with id: " + flightId + " was found.");
             return new FlightResponse(foundFlight.get().getId(), foundFlight.get().getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getDepartureTime()),
                     HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getArrivalTime()), foundFlight.get().getFrom(), foundFlight.get().getTo());
