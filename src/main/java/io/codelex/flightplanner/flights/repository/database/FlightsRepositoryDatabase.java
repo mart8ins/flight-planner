@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface FlightsRepositoryDatabase extends JpaRepository<Flight, Integer> {
 
-    @Query("SELECT f from Flight f WHERE f.from.airport = :from and f.to.airport = :to and f.departureTime = DATE(:departure)")
+    @Query("SELECT f from Flight f WHERE f.from.airport = :from and f.to.airport = :to and DATE(f.departureTime) = :departure")
     List<Flight> findFlights(
             @Param("from")
             String from,

@@ -7,13 +7,11 @@ import io.codelex.flightplanner.flights.customer.request.SearchFlightRequest;
 import io.codelex.flightplanner.flights.customer.response.SearchedFlightsResponse;
 import io.codelex.flightplanner.flights.repository.database.AirportsRepositoryDatabase;
 import io.codelex.flightplanner.flights.repository.database.FlightsRepositoryDatabase;
-import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +36,8 @@ public class CustomerServiceDatabase implements CustomerService {
         Optional<Flight> foundFlightForCustomer = flightsRepositoryDatabase.findById(Integer.parseInt(flightId));
         if(foundFlightForCustomer.isPresent()){
             logger.info("Flight with id: " + flightId + " was found.");
-            return new FlightResponse(foundFlightForCustomer.get().getId(), foundFlightForCustomer.get().getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(foundFlightForCustomer.get().getDepartureTime()),
-                    HandleDatesFormatter.formatLocalDateTimeToString(foundFlightForCustomer.get().getArrivalTime()), foundFlightForCustomer.get().getFrom(), foundFlightForCustomer.get().getTo());
+            return new FlightResponse(foundFlightForCustomer.get().getId(), foundFlightForCustomer.get().getCarrier(), foundFlightForCustomer.get().getDepartureTime(),
+                    foundFlightForCustomer.get().getArrivalTime(), foundFlightForCustomer.get().getFrom(), foundFlightForCustomer.get().getTo());
         }
         logger.info("Failed to find flight with id: " + flightId);
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no flight with given id.");
@@ -52,9 +50,8 @@ public class CustomerServiceDatabase implements CustomerService {
             logger.error("Tried to search flight with invalid data, flight from: " + flight.getFrom() + " flight to: " + flight.getTo());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid search data. From and To airports are equal.");
         }
-        logger.info("Searched flight is " + flight);
-
-        List<Flight> foundFlights = flightsRepositoryDatabase.findFlights(flight.getFrom(), flight.getTo(), HandleDatesFormatter.formatStringToDate(flight.getDepartureDate()));
+        logger.info("Searched flight in database is " + flight);
+        List<Flight> foundFlights = flightsRepositoryDatabase.findFlights(flight.getFrom().toUpperCase(), flight.getTo().toUpperCase(), flight.getDepartureDate());
 
         result.setTotalItems(foundFlights.size());
         result.setItems(foundFlights);
