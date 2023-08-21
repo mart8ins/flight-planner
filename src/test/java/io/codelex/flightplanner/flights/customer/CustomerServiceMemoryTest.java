@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ class CustomerServiceMemoryTest {
         searchedFlightsResponse.setItems(Arrays.asList(expectedFlight));
 
         // SEARCH FLIGHT REQUEST
-        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", "2023-06-02");
+        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", LocalDate.of(2023,6,2));
 
         Mockito.when(flightsRepositoryMemory.searchFlights(searchFlightRequest)).thenReturn(searchedFlightsResponse);
 
@@ -136,9 +138,11 @@ class CustomerServiceMemoryTest {
         FlightResponse flightResponse = customerFlightsServiceInMemory.getFlightById(String.valueOf(flightId));
         Mockito.verify(flightsRepositoryMemory).getFlightById(String.valueOf(flightId));
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         Assertions.assertEquals("Latvia", flightResponse.getFrom().getCountry());
         Assertions.assertEquals("Estonia", flightResponse.getTo().getCountry());
-        Assertions.assertEquals("2023-06-02 12:00", flightResponse.getDepartureTime());
+        Assertions.assertEquals("2023-06-02 12:00", flightResponse.getDepartureTime().format(formatter));
         Assertions.assertEquals(flightId, flightResponse.getId());
     }
 }

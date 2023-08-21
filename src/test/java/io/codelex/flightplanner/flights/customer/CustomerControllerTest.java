@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ class CustomerControllerTest {
         int flightId = 1;
 
         FlightResponse expectedFlightResponse = new FlightResponse(1,
-                "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00", new Airport("RIX", "Latvia", "Riga"), new Airport("EENA", "Estonia", "Narva" ));
+                "AirBaltic", LocalDateTime.of(2023,6,2,12,0), LocalDateTime.of(2023,6,4,12,0), new Airport("RIX", "Latvia", "Riga"), new Airport("EENA", "Estonia", "Narva" ));
 
         Mockito.when(customerFlightsServiceInMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
@@ -70,10 +71,12 @@ class CustomerControllerTest {
         Mockito.verify(customerFlightsServiceInMemory).getFlightById(flightIdQueryCapture.capture());
         String capturedFlightIdQuery = flightIdQueryCapture.getValue();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         Assertions.assertEquals(String.valueOf(flightId), capturedFlightIdQuery);
         Assertions.assertEquals("Latvia", actualFlightResponse.getFrom().getCountry());
         Assertions.assertEquals("Estonia", actualFlightResponse.getTo().getCountry());
-        Assertions.assertEquals("2023-06-02 12:00", actualFlightResponse.getDepartureTime());
+        Assertions.assertEquals("2023-06-02 12:00", actualFlightResponse.getDepartureTime().format(formatter));
         Assertions.assertEquals(flightId, actualFlightResponse.getId());
     }
 
@@ -86,7 +89,7 @@ class CustomerControllerTest {
                 "AirBaltic", departure, arrival, new Airport("RIX", "Latvia", "Riga" ), new Airport("EENA", "Estonia", "Narva"));
         searchedFlightsResponse.setItems(Arrays.asList(expectedFlight));
 
-        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", "2023-06-02");
+        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "EENA", LocalDate.of(2023,6,2));
 
         Mockito.when(customerFlightsServiceInMemory.searchFlights(searchFlightRequest)).thenReturn(searchedFlightsResponse);
 

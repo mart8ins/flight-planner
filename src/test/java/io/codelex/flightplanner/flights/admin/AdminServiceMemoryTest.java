@@ -13,6 +13,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @ExtendWith(MockitoExtension.class)
 class AdminServiceMemoryTest {
@@ -43,18 +44,20 @@ class AdminServiceMemoryTest {
         FlightResponse flightResponse = adminServiceMemory.getFlightById(String.valueOf(flightId));
         Mockito.verify(flightsRepositoryMemory).getFlightById(String.valueOf(flightId));
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         Assertions.assertEquals("Latvia", flightResponse.getFrom().getCountry());
         Assertions.assertEquals("Estonia", flightResponse.getTo().getCountry());
-        Assertions.assertEquals("2023-06-02 12:00", flightResponse.getDepartureTime());
+        Assertions.assertEquals("2023-06-02 12:00", flightResponse.getDepartureTime().format(formatter));
         Assertions.assertEquals(flightId, flightResponse.getId());
     }
 
     @Test
     void saveFlight() {
         FlightRequest expectedFlightRequest = new FlightRequest(
-                "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00", new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
+                "AirBaltic", LocalDateTime.of(2023,6,1,12,0), LocalDateTime.of(2023,6,2,12,0), new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
         FlightResponse expectedFlightResponse = new FlightResponse(1,
-                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00", new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
+                "AirBaltic", LocalDateTime.of(2023,6,1,12,0), LocalDateTime.of(2023,6,2,12,0), new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
 
         Mockito.when(flightsRepositoryMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
         FlightResponse flightResponseActual = adminServiceMemory.saveFlight(expectedFlightRequest);

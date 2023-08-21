@@ -10,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @ExtendWith(MockitoExtension.class)
 class AdminControllerTest {
@@ -36,7 +39,7 @@ class AdminControllerTest {
         int flightId = 1;
 
         FlightResponse expectedFlightResponse = new FlightResponse(1,
-                "AirBaltic", "2023-06-02 12:00", "2023-06-04 12:00", new Airport("RIX", "Latvia", "Riga" ), new Airport("EENA", "Estonia", "Narva"));
+                "AirBaltic", LocalDateTime.of(2023,6,2,12,0), LocalDateTime.of(2023,6,4,12,0), new Airport("RIX", "Latvia", "Riga" ), new Airport("EENA", "Estonia", "Narva"));
 
         Mockito.when(adminServiceMemory.getFlightById(String.valueOf(flightId))).thenReturn(expectedFlightResponse);
 
@@ -45,19 +48,21 @@ class AdminControllerTest {
         Mockito.verify(adminServiceMemory).getFlightById(flightIdQueryCapture.capture());
         String capturedFlightIdQuery = flightIdQueryCapture.getValue();
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
         Assertions.assertEquals(String.valueOf(flightId), capturedFlightIdQuery);
         Assertions.assertEquals("Latvia", actualFlightResponse.getFrom().getCountry());
         Assertions.assertEquals("Estonia", actualFlightResponse.getTo().getCountry());
-        Assertions.assertEquals("2023-06-02 12:00", actualFlightResponse.getDepartureTime());
+        Assertions.assertEquals("2023-06-02 12:00", actualFlightResponse.getDepartureTime().format(formatter));
         Assertions.assertEquals(flightId, actualFlightResponse.getId());
     }
 
     @Test
     void saveFlight() {
         FlightRequest expectedFlightRequest = new FlightRequest(
-                "AirBaltic", "2023-06-01-12-00", "2023-06-02-12-00",new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
+                "AirBaltic", LocalDateTime.of(2023,6,1,12,0), LocalDateTime.of(2023,6,2,12,0),new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
         FlightResponse expectedFlightResponse = new FlightResponse(1,
-                "AirBaltic", "2023-06-01 12:00", "2023-06-02 12:00", new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
+                "AirBaltic", LocalDateTime.of(2023,6,1,12,0), LocalDateTime.of(2023,6,2,12,0), new Airport("Latvia", "Riga", "RIX"), new Airport("Estonia", "Narva", "EENA"));
 
         Mockito.when(adminServiceMemory.saveFlight(expectedFlightRequest)).thenReturn(expectedFlightResponse);
         FlightResponse flightResponseActual = adminController.saveFlight(expectedFlightRequest);

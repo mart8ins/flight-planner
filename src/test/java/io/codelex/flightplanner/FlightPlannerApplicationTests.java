@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -44,8 +46,8 @@ class FlightPlannerApplicationTests {
         Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest savedFlightRequest = new FlightRequest("AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        FlightResponse expectedFlightResponse = new FlightResponse(1, "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightRequest savedFlightRequest = new FlightRequest("AirBaltic",LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
+        FlightResponse expectedFlightResponse = new FlightResponse(1, "AirBaltic",LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
         FlightResponse savedFlightResponse = adminController.saveFlight(savedFlightRequest);
 
         Assertions.assertEquals(expectedFlightResponse, savedFlightResponse);
@@ -56,7 +58,7 @@ class FlightPlannerApplicationTests {
         Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightRequest flightToSave = new FlightRequest( "AirBaltic",LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
         FlightResponse returnedFlightResponse = adminController.saveFlight(flightToSave);
         FlightResponse foundFlightByID = adminController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
 
@@ -68,7 +70,7 @@ class FlightPlannerApplicationTests {
         Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightRequest flightToSave = new FlightRequest( "AirBaltic",LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
         FlightResponse returnedFlightResponse = adminController.saveFlight(flightToSave);
         String deleteFlightResponse = adminController.deleteFlight(String.valueOf(returnedFlightResponse.getId()));
 
@@ -82,7 +84,7 @@ class FlightPlannerApplicationTests {
         Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave1 = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightRequest flightToSave1 = new FlightRequest( "AirBaltic",LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
         adminController.saveFlight(flightToSave1);
 
         List<Airport> foundAirportsCountryNamePart = customerController.searchAirport("LAT");
@@ -100,7 +102,7 @@ class FlightPlannerApplicationTests {
         Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest flightToSave = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightRequest flightToSave = new FlightRequest( "AirBaltic",LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
         FlightResponse returnedFlightResponse = adminController.saveFlight(flightToSave);
         FlightResponse foundFlightByID = customerController.getFlightById(String.valueOf(returnedFlightResponse.getId()));
 
@@ -109,13 +111,13 @@ class FlightPlannerApplicationTests {
 
     @Test
     void CustomerApiSearchFlights(){
-        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "BIX", "2023-06-02");
+        SearchFlightRequest searchFlightRequest = new SearchFlightRequest("RIX", "BIX", LocalDate.of(2023,6,2));
         Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
         Airport airport3 = new Airport("OSL", "Sweden", "Oslo");
 
-        FlightRequest flightToSave1 = new FlightRequest( "AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
-        FlightRequest flightToSave2 = new FlightRequest("SwedenBaltic","2023-06-03 12:00","2023-06-05 12:00", airport3, airport2);
+        FlightRequest flightToSave1 = new FlightRequest( "AirBaltic", LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
+        FlightRequest flightToSave2 = new FlightRequest("SwedenBaltic",LocalDateTime.of(2023,6,3,12,0),LocalDateTime.of(2023,6,5,12,0), airport3, airport2);
         FlightResponse flightResponse = adminController.saveFlight(flightToSave1);
         adminController.saveFlight(flightToSave2);
 
@@ -130,7 +132,7 @@ class FlightPlannerApplicationTests {
         Airport airport1 = new Airport("RIX", "Latvia", "Riga");
         Airport airport2 = new Airport("BIX", "Latunia", "Oaua");
 
-        FlightRequest savedFlightRequest = new FlightRequest("AirBaltic","2023-06-02 12:00","2023-06-04 12:00", airport1, airport2);
+        FlightRequest savedFlightRequest = new FlightRequest("AirBaltic",LocalDateTime.of(2023,6,2,12,0),LocalDateTime.of(2023,6,4,12,0), airport1, airport2);
         FlightResponse savedFlightResponse = adminController.saveFlight(savedFlightRequest);
 
         testingController.clearDatabase();
