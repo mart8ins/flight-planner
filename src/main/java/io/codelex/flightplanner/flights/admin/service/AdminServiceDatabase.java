@@ -45,18 +45,16 @@ public class AdminServiceDatabase implements AdminService {
         List<Flight> flightsFromDatabase = flightsRepositoryDatabase.findAll();
         flightReqValidationService.validateRequest(flightsFromDatabase,flightRequest);
 
-        Airport airport1 = new Airport(flightRequest.getFrom().getAirport(), flightRequest.getFrom().getCountry(), flightRequest.getFrom().getCity());
-        Airport airport2 = new Airport(flightRequest.getTo().getAirport(), flightRequest.getTo().getCountry(), flightRequest.getTo().getCity());
+        boolean airport1Exists = checkAirportExistence(flightRequest.getFrom());
+        boolean airport2Exists = checkAirportExistence(flightRequest.getTo());
 
-        boolean airport1Exists = airportsRepositoryDatabase.exists(Example.of(airport1));
-        boolean airport2Exists = airportsRepositoryDatabase.exists(Example.of(airport2));
         if(!airport1Exists) {
-            airportsRepositoryDatabase.save(airport1);
-            logger.info("Airport: " + airport1 +  " added to database.");
+            airportsRepositoryDatabase.save(flightRequest.getFrom());
+            logger.info("Airport: " + flightRequest.getFrom() +  " added to database.");
         }
         if(!airport2Exists) {
-            airportsRepositoryDatabase.save(airport2);
-            logger.info("Airport: " + airport2 +  " added to database.");
+            airportsRepositoryDatabase.save(flightRequest.getTo());
+            logger.info("Airport: " + flightRequest.getTo() +  " added to database.");
         }
         Flight flight = new Flight(flightRequest.getCarrier(), HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime()), HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime()), flightRequest.getFrom(), flightRequest.getTo());
 
@@ -69,5 +67,9 @@ public class AdminServiceDatabase implements AdminService {
         flightsRepositoryDatabase.deleteById(Integer.parseInt(flightId));
         logger.info("Flight with id: " + flightId + " removed from database.");
         return "Flight with id: " + flightId + " removed from database.";
+    }
+    
+    public boolean checkAirportExistence(Airport airport){
+        return airportsRepositoryDatabase.exists(Example.of(airport));
     }
 }
