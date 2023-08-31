@@ -7,7 +7,6 @@ import io.codelex.flightplanner.flights.admin.response.FlightResponse;
 import io.codelex.flightplanner.flights.repository.database.AirportsRepositoryDatabase;
 import io.codelex.flightplanner.flights.repository.database.FlightsRepositoryDatabase;
 import io.codelex.flightplanner.flights.admin.validation.FlightReqValidationService;
-import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
@@ -32,10 +31,10 @@ public class AdminServiceDatabase implements AdminService {
     public FlightResponse getFlightById(String flightId) {
         Optional<Flight> foundFlight = flightsRepositoryDatabase.findById(Integer.parseInt(flightId));
 
-        if(foundFlight.isPresent()){
+        if(foundFlight.isPresent()) {
             logger.info("Flight with id: " + flightId + " was found.");
-            return new FlightResponse(foundFlight.get().getId(), foundFlight.get().getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getDepartureTime()),
-                    HandleDatesFormatter.formatLocalDateTimeToString(foundFlight.get().getArrivalTime()), foundFlight.get().getFrom(), foundFlight.get().getTo());
+            return new FlightResponse(foundFlight.get().getId(), foundFlight.get().getCarrier(), foundFlight.get().getDepartureTime(),
+                    foundFlight.get().getArrivalTime(), foundFlight.get().getFrom(), foundFlight.get().getTo());
         }
         logger.info("Failed to find flight with id: " + flightId);
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no flight with given id.");
@@ -45,29 +44,31 @@ public class AdminServiceDatabase implements AdminService {
         List<Flight> flightsFromDatabase = flightsRepositoryDatabase.findAll();
         flightReqValidationService.validateRequest(flightsFromDatabase,flightRequest);
 
-        Airport airport1 = new Airport(flightRequest.getFrom().getAirport(), flightRequest.getFrom().getCountry(), flightRequest.getFrom().getCity());
-        Airport airport2 = new Airport(flightRequest.getTo().getAirport(), flightRequest.getTo().getCountry(), flightRequest.getTo().getCity());
+        boolean airport1Exists = checkAirportExistence(flightRequest.getFrom());
+        boolean airport2Exists = checkAirportExistence(flightRequest.getTo());
 
-        boolean airport1Exists = airportsRepositoryDatabase.exists(Example.of(airport1));
-        boolean airport2Exists = airportsRepositoryDatabase.exists(Example.of(airport2));
         if(!airport1Exists) {
-            airportsRepositoryDatabase.save(airport1);
-            logger.info("Airport: " + airport1 +  " added to database.");
+            airportsRepositoryDatabase.save(flightRequest.getFrom());
+            logger.info("Airport: " + flightRequest.getFrom() +  " added to database.");
         }
         if(!airport2Exists) {
-            airportsRepositoryDatabase.save(airport2);
-            logger.info("Airport: " + airport2 +  " added to database.");
+            airportsRepositoryDatabase.save(flightRequest.getTo());
+            logger.info("Airport: " + flightRequest.getTo() +  " added to database.");
         }
-        Flight flight = new Flight(flightRequest.getCarrier(), HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime()), HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime()), flightRequest.getFrom(), flightRequest.getTo());
+        Flight flight = new Flight(flightRequest.getCarrier(), flightRequest.getDepartureTime(), flightRequest.getArrivalTime(), flightRequest.getFrom(), flightRequest.getTo());
 
         Flight savedFlight = flightsRepositoryDatabase.save(flight);
         logger.info("Flight: " + savedFlight +  " saved in database.");
-        return new FlightResponse(savedFlight.getId(), savedFlight.getCarrier(), HandleDatesFormatter.formatLocalDateTimeToString(savedFlight.getDepartureTime()), HandleDatesFormatter.formatLocalDateTimeToString(savedFlight.getArrivalTime()), savedFlight.getFrom(), savedFlight.getTo());
+        return new FlightResponse(savedFlight.getId(), savedFlight.getCarrier(), savedFlight.getDepartureTime(), savedFlight.getArrivalTime(), savedFlight.getFrom(), savedFlight.getTo());
     }
 
     public String deleteFlight(String flightId) {
         flightsRepositoryDatabase.deleteById(Integer.parseInt(flightId));
         logger.info("Flight with id: " + flightId + " removed from database.");
         return "Flight with id: " + flightId + " removed from database.";
+    }
+    
+    public boolean checkAirportExistence(Airport airport){
+        return airportsRepositoryDatabase.exists(Example.of(airport));
     }
 }

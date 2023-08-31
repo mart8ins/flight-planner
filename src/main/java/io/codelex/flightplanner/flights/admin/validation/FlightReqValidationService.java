@@ -2,7 +2,6 @@ package io.codelex.flightplanner.flights.admin.validation;
 
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
-import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,8 +17,9 @@ public class FlightReqValidationService {
     private Logger logger = LoggerFactory.getLogger(FlightReqValidationService.class);
 
     public void validateRequest(List<Flight> flightsFromStore, FlightRequest flightRequest){
-        LocalDateTime departureDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getDepartureTime());
-        LocalDateTime arrivalDateTime = HandleDatesFormatter.formatStringToDateTime(flightRequest.getArrivalTime());
+        LocalDateTime departureDateTime = flightRequest.getDepartureTime();
+        LocalDateTime arrivalDateTime = flightRequest.getArrivalTime();
+
 
         boolean flightAlreadyExists = false;
         if(flightsFromStore.size() > 0) {

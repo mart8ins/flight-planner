@@ -4,7 +4,6 @@ import io.codelex.flightplanner.flights.repository.memory.FlightsRepositoryMemor
 import io.codelex.flightplanner.flights.admin.domain.Flight;
 import io.codelex.flightplanner.flights.admin.request.FlightRequest;
 import io.codelex.flightplanner.flights.admin.response.FlightResponse;
-import io.codelex.flightplanner.flights.utils.HandleDatesFormatter;
 
 public class AdminServiceMemory implements AdminService {
 
@@ -17,11 +16,8 @@ public class AdminServiceMemory implements AdminService {
     public FlightResponse getFlightById(String flightId) {
         Flight flightFromDatabase = flightsRepositoryMemory.getFlightById(flightId);
 
-        String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
-        String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
-
         return new FlightResponse(flightFromDatabase.getId(), flightFromDatabase.getCarrier(),
-                departureDateTime, arrivalDateTime, flightFromDatabase.getFrom(), flightFromDatabase.getTo());
+                flightFromDatabase.getDepartureTime(), flightFromDatabase.getArrivalTime(), flightFromDatabase.getFrom(), flightFromDatabase.getTo());
     }
 
     public FlightResponse saveFlight(FlightRequest flightRequest) {

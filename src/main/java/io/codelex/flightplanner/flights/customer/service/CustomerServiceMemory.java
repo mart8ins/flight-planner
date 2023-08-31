@@ -25,10 +25,8 @@ public class CustomerServiceMemory implements CustomerService {
     public FlightResponse getFlightById(String flightId) {
         Flight flightFromDatabase = flightsRepositoryMemory.getFlightById(flightId);
 
-        String departureDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getDepartureTime());
-        String arrivalDateTime = HandleDatesFormatter.formatLocalDateTimeToString(flightFromDatabase.getArrivalTime());
         return new FlightResponse(flightFromDatabase.getId(), flightFromDatabase.getCarrier(),
-                departureDateTime, arrivalDateTime, flightFromDatabase.getFrom(), flightFromDatabase.getTo());
+                flightFromDatabase.getDepartureTime(), flightFromDatabase.getArrivalTime(), flightFromDatabase.getFrom(), flightFromDatabase.getTo());
     }
 
     public SearchedFlightsResponse<Flight> searchFlights(SearchFlightRequest flight) {
